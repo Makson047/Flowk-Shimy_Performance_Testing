@@ -1,0 +1,401 @@
+
+<html>
+<head>
+  <title>k6 Load Test Report</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Inter", Roboto, Arial, sans-serif;
+      padding: 2rem; background-color: #fafafa; color: #222; line-height: 1.45; }
+    h1, h2, h3 { margin-bottom: 0.5rem; font-weight: 600; color: #111; }
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.2rem; display: flex; align-items: center; gap: .5rem; }
+    h2 svg { width: 1rem; height: 1rem; }
+    p.note { color: #555; font-size: 0.9rem; margin-top: 0; margin-bottom: 1.5rem; }
+    section { margin-bottom: 2rem; background: #fff; padding: 1.5rem 2rem;
+      border-radius: 12px; box-shadow: 0 10px 24px -8px rgba(0,0,0,0.12); }
+    table { border-collapse: collapse; width: 100%; margin-top: 2rem; font-size: 0.9rem; }
+    th, td { border: 1px solid #ddd; padding: 0.75rem; text-align: left; vertical-align: top; }
+    th { background-color: #f4f4f4; font-weight: 600; }
+    tr:nth-child(even) { background: #fafafa; }
+    .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem; align-items: flex-start; }
+    .chart-card { background: #fff; border-radius: 12px; padding: 1rem 1rem 2rem;
+      box-shadow: 0 10px 24px -8px rgba(0,0,0,0.12); }
+    canvas { max-width: 100%; height: 260px; }
+    .kpi-row { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 1rem; }
+    .kpi-box { background: #fff; border-radius: 12px; box-shadow: 0 10px 24px -8px rgba(0,0,0,0.12);
+      padding: 1rem 1.25rem; min-width: 220px; flex: 0 0 auto; }
+    .kpi-label { font-size: 0.7rem; color: #666; text-transform: uppercase;
+      margin-bottom: 0.4rem; letter-spacing: .03em; font-weight: 500; }
+    .kpi-value { font-size: 1.1rem; font-weight: 600; color: #111; }
+    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+    .meta-box { background: #fff; border-radius: 12px; box-shadow: 0 10px 24px -8px rgba(0,0,0,0.12);
+      padding: 1rem 1.25rem; font-size: .9rem; line-height: 1.4; }
+    .meta-label { font-size: .7rem; letter-spacing: .03em; text-transform: uppercase;
+      color: #666; font-weight: 500; margin-bottom: .25rem; }
+    .meta-value { font-weight: 600; color: #111; word-break: break-all; }
+    .verdict-pill { display: inline-block; padding: .35rem .8rem; border-radius: 999px;
+      font-weight: 600; font-size: .85rem; }
+    .verdict-pass { background: #d4f5dc; color: #14532d; }
+    .verdict-fail { background: #ffe1e0; color: #7f1d1d; }
+  </style>
+</head>
+<body>
+  <h1>k6 Load Test Report</h1>
+  <p class="note">
+    Auto-generated from k6 <code>summary.json</code>. Use these metrics for capacity / stress analysis,
+    SLA validation and regression tracking.
+  </p>
+
+  <section>
+    <h2>Test metadata</h2>
+    <div class="meta-grid">
+      <div class="meta-box"><div class="meta-label">Test file executed</div>
+        <div class="meta-value">shimy/shimyFeedLoad.js</div></div>
+      <div class="meta-box"><div class="meta-label">Run timestamp</div>
+        <div class="meta-value">20260511_092246</div></div>
+      <div class="meta-box"><div class="meta-label">Max VUs observed</div>
+        <div class="meta-value">200</div></div>
+      <div class="meta-box"><div class="meta-label">Threshold verdict</div>
+        <div class="meta-value">
+          <span class="verdict-pill verdict-pass">
+            ✅ PASS (3/3)
+          </span>
+        </div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>High-level KPIs</h2>
+    
+    <div class="kpi-row">
+      <div class="kpi-box">
+        <div class="kpi-label">Avg requests/sec (RPS)</div>
+        <div class="kpi-value">14.37</div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-label">Total HTTP requests</div>
+        <div class="kpi-value">4260</div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-label">Latency p50 / p95 / p99 (ms)</div>
+        <div class="kpi-value">
+          11046.69 / 13297.43 / 14094.17
+        </div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-label">Passed / Failed requests</div>
+        <div class="kpi-value">4210 / 0</div>
+      </div>
+      
+      <div class="kpi-box">
+        <div class="kpi-label">Errors: 4xx / 5xx / network</div>
+        <div class="kpi-value">0 / 0 / 0</div>
+      </div>
+    </div>
+    <p class="note">
+      Pass/Fail source: <strong>custom-http</strong>.
+    </p>
+  
+  </section>
+
+  <section>
+    <h2>Core performance visuals</h2>
+    
+    <div class="charts-grid">
+      <div class="chart-card"><h3>Latency distribution (ms)</h3>
+        <p class="note">Response time percentiles. Rising p95/p99 means degraded UX.</p>
+        <canvas id="latencyChart"></canvas></div>
+      <div class="chart-card"><h3>Requests per second (RPS)</h3>
+        <p class="note">A flat line at high VUs may indicate saturation.</p>
+        <canvas id="rpsChart"></canvas></div>
+      <div class="chart-card"><h3>Pass vs Fail</h3>
+        <p class="note">Green = success. Red = 4xx/5xx/timeouts.</p>
+        <canvas id="passFailChart"></canvas></div>
+      <div class="chart-card"><h3>Low-level timings breakdown</h3>
+        <p class="note">HTTP request duration distribution.</p>
+        <canvas id="durationChart"></canvas></div>
+      <div class="chart-card"><h3>Connection / Send / Wait(TTFB) / Receive</h3>
+        <p class="note">Separates backend slowness (Wait/TTFB) from network overhead.</p>
+        <canvas id="networkChart"></canvas></div>
+      <div class="chart-card"><h3>Error type breakdown</h3>
+        <p class="note">Distinguish app-layer errors (4xx/5xx) from transport problems.</p>
+        <canvas id="errorBreakdownChart"></canvas></div>
+    </div>
+  
+  </section>
+
+  
+    <section>
+      <h2>Timeline (per 5s buckets)</h2>
+      <p class="note">
+        How the test evolved over time — the moment p95 starts climbing or RPS starts plateauing
+        is usually where the system began to degrade.
+      </p>
+      <div class="charts-grid">
+        <div class="chart-card"><h3>Active VUs over time</h3>
+          <canvas id="tlVusChart"></canvas></div>
+        <div class="chart-card"><h3>RPS over time</h3>
+          <canvas id="tlRpsChart"></canvas></div>
+        <div class="chart-card"><h3>Latency p95 over time (ms)</h3>
+          <canvas id="tlLatencyChart"></canvas></div>
+        <div class="chart-card"><h3>Feed latency p95 over time (ms)</h3>
+          <canvas id="tlFeedChart"></canvas></div>
+        
+        <div class="chart-card"><h3>Errors over time (counts per bucket)</h3>
+          <canvas id="tlErrorsChart"></canvas></div>
+      </div>
+    </section>
+  
+
+  <section>
+    <h2>Threshold breakdown</h2>
+    <table>
+      <thead><tr><th>Metric</th><th>Threshold</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr>
+                    <td>http_req_failed</td>
+                    <td><code>rate<0.01</code></td>
+                    <td>✅ pass</td>
+                  </tr><tr>
+                    <td>http_req_duration{name:feed}</td>
+                    <td><code>p(95)<800</code></td>
+                    <td>✅ pass</td>
+                  </tr><tr>
+                    <td>http_req_duration{name:feed}</td>
+                    <td><code>p(99)<1500</code></td>
+                    <td>✅ pass</td>
+                  </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Raw metrics table</h2>
+    <table>
+      <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+      <tbody>
+        
+              <tr>
+                <td>Blocked Time (ms)</td>
+                <td>max: 278.62 ms<br>p(50): 0.01 ms<br>p(90): 0.02 ms<br>p(95): 0.07 ms<br>p(99): 269.18 ms<br>avg: 12.59 ms<br>min: 0.00 ms<br>med: 0.01 ms</td>
+              </tr>
+              <tr>
+                <td>checks</td>
+                <td>1.00 </td>
+              </tr>
+              <tr>
+                <td>Connection Time (ms)</td>
+                <td>med: 0.00 ms<br>max: 133.10 ms<br>p(50): 0.00 ms<br>p(90): 0.00 ms<br>p(95): 0.00 ms<br>p(99): 129.58 ms<br>avg: 6.05 ms<br>min: 0.00 ms</td>
+              </tr>
+              <tr>
+                <td>Data Received (bytes)</td>
+                <td>count: 35873654.00 bytes<br>rate: 121007.66 bytes</td>
+              </tr>
+              <tr>
+                <td>Data Sent (bytes)</td>
+                <td>count: 1882425.00 bytes<br>rate: 6349.73 bytes</td>
+              </tr>
+              <tr>
+                <td>Expected Response Duration (ms)</td>
+                <td>max: 22798.09 ms<br>p(50): 11046.69 ms<br>p(90): 12864.98 ms<br>p(95): 13297.43 ms<br>p(99): 14094.17 ms<br>avg: 9798.63 ms<br>min: 133.54 ms<br>med: 11046.69 ms</td>
+              </tr>
+              <tr>
+                <td>Failed Requests</td>
+                <td>0.00 </td>
+              </tr>
+              <tr>
+                <td>http_req_duration{name:feed}</td>
+                <td>med: 11073.94 <br>max: 22798.09 <br>p(50): 11073.94 <br>p(90): 12869.78 <br>p(95): 13308.72 <br>p(99): 14104.46 <br>avg: 9908.99 <br>min: 133.54 <br>thresholds: NaN </td>
+              </tr>
+              <tr>
+                <td>Iteration Duration (ms)</td>
+                <td>p(50): 12076.70 ms<br>p(90): 13870.94 ms<br>p(95): 14310.32 ms<br>p(99): 15106.14 ms<br>avg: 10923.16 ms<br>min: 1135.23 ms<br>med: 12076.70 ms<br>max: 23799.93 ms</td>
+              </tr>
+              <tr>
+                <td>Max Virtual Users</td>
+                <td>200.00 </td>
+              </tr>
+              <tr>
+                <td>Request Send Time (ms)</td>
+                <td>p(95): 0.07 ms<br>p(99): 0.11 ms<br>avg: 0.04 ms<br>min: 0.01 ms<br>med: 0.04 ms<br>max: 0.70 ms<br>p(50): 0.04 ms<br>p(90): 0.06 ms</td>
+              </tr>
+              <tr>
+                <td>Response Receive Time (ms)</td>
+                <td>p(99): 0.28 ms<br>avg: 0.13 ms<br>min: 0.01 ms<br>med: 0.12 ms<br>max: 1.24 ms<br>p(50): 0.12 ms<br>p(90): 0.20 ms<br>p(95): 0.22 ms</td>
+              </tr>
+              <tr>
+                <td>Shimy feed latency (ms, Trend)</td>
+                <td>avg: 9908.99 ms, Trend<br>min: 133.54 ms, Trend<br>med: 11073.94 ms, Trend<br>max: 22798.09 ms, Trend<br>p(50): 11073.94 ms, Trend<br>p(90): 12869.78 ms, Trend<br>p(95): 13308.72 ms, Trend<br>p(99): 14104.46 ms, Trend</td>
+              </tr>
+              <tr>
+                <td>Successful HTTP requests (custom)</td>
+                <td>count: 4210.00 custom<br>rate: 14.20 custom</td>
+              </tr>
+              <tr>
+                <td>TLS Handshaking Time (ms)</td>
+                <td>p(95): 0.00 ms<br>p(99): 139.88 ms<br>avg: 6.51 ms<br>min: 0.00 ms<br>med: 0.00 ms<br>max: 149.82 ms<br>p(50): 0.00 ms<br>p(90): 0.00 ms</td>
+              </tr>
+              <tr>
+                <td>Total HTTP Requests</td>
+                <td>count: 4260.00 <br>rate: 14.37 </td>
+              </tr>
+              <tr>
+                <td>Total Iterations</td>
+                <td>count: 4210.00 <br>rate: 14.20 </td>
+              </tr>
+              <tr>
+                <td>Total Request Duration (ms)</td>
+                <td>p(95): 13297.43 ms<br>p(99): 14094.17 ms<br>avg: 9798.63 ms<br>min: 133.54 ms<br>med: 11046.69 ms<br>max: 22798.09 ms<br>p(50): 11046.69 ms<br>p(90): 12864.98 ms</td>
+              </tr>
+              <tr>
+                <td>Virtual Users (VUs)</td>
+                <td>3.00 VUs</td>
+              </tr>
+              <tr>
+                <td>Waiting Time (TTFB) (ms)</td>
+                <td>p(90): 12864.83 TTFB<br>p(95): 13297.16 TTFB<br>p(99): 14093.98 TTFB<br>avg: 9798.46 TTFB<br>min: 133.41 TTFB<br>med: 11046.50 TTFB<br>max: 22797.92 TTFB<br>p(50): 11046.50 TTFB</td>
+              </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <script>
+    new Chart(document.getElementById('passFailChart'), {
+      type: 'pie',
+      data: {
+        labels: ['Passed', 'Failed'],
+        datasets: [{
+          data: [4210, 0],
+          backgroundColor: ['#34a853', '#ea4335']
+        }]
+      },
+      options: { plugins: { legend: { position: 'top' } } }
+    });
+
+    
+      new Chart(document.getElementById('latencyChart'), {
+        type: 'bar',
+        data: {
+          labels: ['p50', 'p95', 'p99'],
+          datasets: [{
+            data: [
+              11046.69,
+              13297.43,
+              14094.17
+            ],
+            backgroundColor: '#007acc'
+          }]
+        },
+        options: { plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { callback: v => v + ' ms' } } } }
+      });
+
+      new Chart(document.getElementById('rpsChart'), {
+        type: 'bar',
+        data: { labels: ['Avg RPS'], datasets: [{
+          data: [14.37],
+          backgroundColor: '#4b9c5a'
+        }] },
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+      });
+
+      const durationData = {"p(95)":13297.43055,"p(99)":14094.167209999998,"avg":9798.62843920187,"min":133.542,"med":11046.688,"max":22798.089,"p(50)":11046.688,"p(90)":12864.9809};
+      new Chart(document.getElementById('durationChart'), {
+        type: 'bar',
+        data: {
+          labels: ["Avg","Min","Max","p(90)","p(95)"],
+          datasets: [{
+            label: 'Total Request Duration (ms)',
+            data: [durationData.avg, durationData.min, durationData.max,
+                   durationData['p(90)'], durationData['p(95)']],
+            backgroundColor: '#007acc'
+          }]
+        },
+        options: { plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { callback: v => v + ' ms' } } } }
+      });
+
+      new Chart(document.getElementById('networkChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Connect', 'Send', 'Wait (TTFB)', 'Receive'],
+          datasets: [{
+            label: 'Avg timing (ms)',
+            data: [6.053090845070427, 0.04330657276995326,
+                   9798.456099765264, 0.12903286384976562],
+            backgroundColor: '#8e5af7'
+          }]
+        },
+        options: { plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { callback: v => v + ' ms' } } } }
+      });
+
+      
+      new Chart(document.getElementById('errorBreakdownChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['4xx', '5xx', 'Network'],
+          datasets: [{ data: [0, 0, 0],
+            backgroundColor: ['#f59e0b', '#ea4335', '#6b7280'] }]
+        },
+        options: { plugins: { legend: { position: 'top' } } }
+      });
+    
+
+    
+
+    
+      const tl = [{"t":0,"vus":0,"rps":2,"p95":616.957,"chatRttP95":null,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":5,"vus":0,"rps":2,"p95":515.783,"chatRttP95":null,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":10,"vus":0,"rps":2,"p95":507.004,"chatRttP95":null,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":15,"vus":0,"rps":2,"p95":524.13,"chatRttP95":null,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":20,"vus":0,"rps":2,"p95":513.945,"chatRttP95":null,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":25,"vus":15,"rps":7.6,"p95":388.816,"chatRttP95":null,"feedLatencyP95":388.816,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":30,"vus":31,"rps":11.8,"p95":1924.586,"chatRttP95":null,"feedLatencyP95":1924.586,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":35,"vus":48,"rps":16.2,"p95":2816.542,"chatRttP95":null,"feedLatencyP95":2816.542,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":40,"vus":65,"rps":19,"p95":2929.692,"chatRttP95":null,"feedLatencyP95":2929.692,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":45,"vus":81,"rps":16.4,"p95":3773.263,"chatRttP95":null,"feedLatencyP95":3773.263,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":50,"vus":98,"rps":13.4,"p95":5119.254,"chatRttP95":null,"feedLatencyP95":5119.254,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":55,"vus":114,"rps":16.8,"p95":6560.835,"chatRttP95":null,"feedLatencyP95":6560.835,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":60,"vus":131,"rps":14.4,"p95":6776.13,"chatRttP95":null,"feedLatencyP95":6776.13,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":65,"vus":148,"rps":13.8,"p95":8087.647,"chatRttP95":null,"feedLatencyP95":8087.647,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":70,"vus":164,"rps":14,"p95":9316.261,"chatRttP95":null,"feedLatencyP95":9316.261,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":75,"vus":181,"rps":16,"p95":10279.963,"chatRttP95":null,"feedLatencyP95":10279.963,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":80,"vus":197,"rps":15.4,"p95":10671.559,"chatRttP95":null,"feedLatencyP95":10671.559,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":85,"vus":200,"rps":16.8,"p95":10745.051,"chatRttP95":null,"feedLatencyP95":10745.051,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":90,"vus":200,"rps":15.2,"p95":11958.574,"chatRttP95":null,"feedLatencyP95":11958.574,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":95,"vus":200,"rps":17,"p95":12701.007,"chatRttP95":null,"feedLatencyP95":12701.007,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":100,"vus":200,"rps":15,"p95":12693.648,"chatRttP95":null,"feedLatencyP95":12693.648,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":105,"vus":200,"rps":15.8,"p95":13260.394,"chatRttP95":null,"feedLatencyP95":13260.394,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":110,"vus":200,"rps":17,"p95":13192.258,"chatRttP95":null,"feedLatencyP95":13192.258,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":115,"vus":200,"rps":18.8,"p95":12322.433,"chatRttP95":null,"feedLatencyP95":12322.433,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":120,"vus":200,"rps":15,"p95":12102.217,"chatRttP95":null,"feedLatencyP95":12102.217,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":125,"vus":200,"rps":18,"p95":12112.431,"chatRttP95":null,"feedLatencyP95":12112.431,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":130,"vus":200,"rps":13.4,"p95":12087.237,"chatRttP95":null,"feedLatencyP95":12087.237,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":135,"vus":200,"rps":13.2,"p95":13462.007,"chatRttP95":null,"feedLatencyP95":13462.007,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":140,"vus":200,"rps":17.2,"p95":14537.044,"chatRttP95":null,"feedLatencyP95":14537.044,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":145,"vus":200,"rps":16.4,"p95":13977.221,"chatRttP95":null,"feedLatencyP95":13977.221,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":150,"vus":200,"rps":15.2,"p95":12299.959,"chatRttP95":null,"feedLatencyP95":12299.959,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":155,"vus":200,"rps":14.8,"p95":12758.51,"chatRttP95":null,"feedLatencyP95":12758.51,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":160,"vus":200,"rps":15,"p95":13044.192,"chatRttP95":null,"feedLatencyP95":13044.192,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":165,"vus":200,"rps":17.2,"p95":13140.943,"chatRttP95":null,"feedLatencyP95":13140.943,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":170,"vus":200,"rps":18,"p95":12330.363,"chatRttP95":null,"feedLatencyP95":12330.363,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":175,"vus":200,"rps":17.8,"p95":11569.046,"chatRttP95":null,"feedLatencyP95":11569.046,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":180,"vus":200,"rps":13.6,"p95":11874.054,"chatRttP95":null,"feedLatencyP95":11874.054,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":185,"vus":200,"rps":16,"p95":12443.523,"chatRttP95":null,"feedLatencyP95":12443.523,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":190,"vus":200,"rps":15.6,"p95":13233.265,"chatRttP95":null,"feedLatencyP95":13233.265,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":195,"vus":200,"rps":15,"p95":13809.319,"chatRttP95":null,"feedLatencyP95":13809.319,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":200,"vus":200,"rps":14.6,"p95":13578.993,"chatRttP95":null,"feedLatencyP95":13578.993,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":205,"vus":200,"rps":13.8,"p95":14219.199,"chatRttP95":null,"feedLatencyP95":14219.199,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":210,"vus":200,"rps":18.6,"p95":14213.585,"chatRttP95":null,"feedLatencyP95":14213.585,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":215,"vus":200,"rps":18.8,"p95":13509.365,"chatRttP95":null,"feedLatencyP95":13509.365,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":220,"vus":200,"rps":16.2,"p95":10875.996,"chatRttP95":null,"feedLatencyP95":10875.996,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":225,"vus":200,"rps":15.4,"p95":12346.411,"chatRttP95":null,"feedLatencyP95":12346.411,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":230,"vus":200,"rps":16.6,"p95":12757.821,"chatRttP95":null,"feedLatencyP95":12757.821,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":235,"vus":200,"rps":17.4,"p95":12882.179,"chatRttP95":null,"feedLatencyP95":12882.179,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":240,"vus":200,"rps":15.4,"p95":12114.286,"chatRttP95":null,"feedLatencyP95":12114.286,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":245,"vus":200,"rps":16.2,"p95":12248.224,"chatRttP95":null,"feedLatencyP95":12248.224,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":250,"vus":200,"rps":16.2,"p95":12617.224,"chatRttP95":null,"feedLatencyP95":12617.224,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":255,"vus":200,"rps":17,"p95":12575.343,"chatRttP95":null,"feedLatencyP95":12575.343,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":260,"vus":200,"rps":14.6,"p95":12472.669,"chatRttP95":null,"feedLatencyP95":12472.669,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":265,"vus":200,"rps":16.8,"p95":12839.729,"chatRttP95":null,"feedLatencyP95":12839.729,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":270,"vus":195,"rps":12.8,"p95":13604.633,"chatRttP95":null,"feedLatencyP95":13604.633,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":275,"vus":173,"rps":12.8,"p95":14454.261,"chatRttP95":null,"feedLatencyP95":14454.261,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":280,"vus":148,"rps":16,"p95":14474.246,"chatRttP95":null,"feedLatencyP95":14474.246,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":285,"vus":107,"rps":17.6,"p95":13050.362,"chatRttP95":null,"feedLatencyP95":13050.362,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":290,"vus":57,"rps":13.4,"p95":6236.639,"chatRttP95":null,"feedLatencyP95":6236.639,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":295,"vus":3,"rps":0,"p95":null,"chatRttP95":null,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0}];
+      const tlLabels = tl.map(b => b.t + 's');
+
+      new Chart(document.getElementById('tlVusChart'), {
+        type: 'line',
+        data: { labels: tlLabels, datasets: [{ label: 'VUs', data: tl.map(b => b.vus),
+          borderColor: '#007acc', tension: 0.2, fill: false }] },
+        options: { plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } } }
+      });
+
+      
+      new Chart(document.getElementById('tlRpsChart'), {
+        type: 'line',
+        data: { labels: tlLabels, datasets: [{ label: 'RPS', data: tl.map(b => b.rps),
+          borderColor: '#4b9c5a', tension: 0.2, fill: false }] },
+        options: { plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } } }
+      });
+
+      new Chart(document.getElementById('tlLatencyChart'), {
+        type: 'line',
+        data: { labels: tlLabels, datasets: [{ label: 'p95 latency (ms)',
+          data: tl.map(b => b.p95), borderColor: '#ea4335', tension: 0.2, fill: false }] },
+        options: { plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { callback: v => v + ' ms' } } } }
+      });
+
+      
+      new Chart(document.getElementById('tlFeedChart'), {
+        type: 'line',
+        data: { labels: tlLabels, datasets: [{ label: 'Feed latency p95 (ms)',
+          data: tl.map(b => b.feedLatencyP95), borderColor: '#0ea5e9', tension: 0.2, fill: false }] },
+        options: { plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { callback: v => v + ' ms' } } } }
+      });
+
+      
+
+      
+      new Chart(document.getElementById('tlErrorsChart'), {
+        type: 'line',
+        data: { labels: tlLabels, datasets: [
+          { label: '4xx', data: tl.map(b => b.errors4xx), borderColor: '#f59e0b', tension: 0.2, fill: false },
+          { label: '5xx', data: tl.map(b => b.errors5xx), borderColor: '#ea4335', tension: 0.2, fill: false },
+          { label: 'network', data: tl.map(b => b.errorsNet), borderColor: '#6b7280', tension: 0.2, fill: false }
+        ] },
+        options: { scales: { y: { beginAtZero: true } } }
+      });
+    
+  </script>
+</body>
+</html>

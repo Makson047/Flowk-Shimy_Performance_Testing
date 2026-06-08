@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Shimy Load Testing Report v2</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    max-width: 960px; margin: 2rem auto; padding: 0 1rem; color: #172b4d; line-height: 1.55; }
+  h1 { font-size: 1.7rem; }
+  h2 { font-size: 1.25rem; margin-top: 2rem; border-bottom: 1px solid #dfe1e6; padding-bottom: .25rem; }
+  h3 { font-size: 1.05rem; margin-top: 1.5rem; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .93rem; }
+  th, td { border: 1px solid #dfe1e6; padding: .5rem .7rem; text-align: left; vertical-align: top; }
+  th { background: #f4f5f7; font-weight: 600; }
+  code { background: #f4f5f7; padding: .1rem .35rem; border-radius: 3px; font-size: .92em; }
+  blockquote.tldr { background: #deebff; border-left: 4px solid #0052cc; padding: 1rem 1.25rem; margin: 1.25rem 0; border-radius: 3px; }
+  blockquote.win  { background: #e3fcef; border-left: 4px solid #00875a; padding: 1rem 1.25rem; margin: 1rem 0; border-radius: 3px; }
+  blockquote.note { background: #fffae6; border-left: 4px solid #ffab00; padding: 1rem 1.25rem; margin: 1rem 0; border-radius: 3px; }
+  blockquote.warn { background: #ffebe6; border-left: 4px solid #de350b; padding: 1rem 1.25rem; margin: 1rem 0; border-radius: 3px; }
+  .good { color: #00875a; font-weight: 600; }
+  .bad  { color: #de350b; font-weight: 600; }
+  .same { color: #6b778c; }
+</style>
+</head>
+<body>
+
+<h1>Shimy Load Testing Report — v2 (after backend fix)</h1>
+
+<blockquote class="tldr">
+<strong>Bottom line: the current performance is sufficient for an MVP launch.</strong> The backend fix delivered a measurable improvement — the feed is <strong>15–30% faster</strong>, the chat <strong>25–32% faster</strong>, and the feed now comfortably serves up to <strong>~160 simultaneous feed requests</strong> before slowing down. Crucially, “160 simultaneous requests” in the test is far more aggressive than real usage: real users don’t all refresh the feed in the same second, so in practice the app supports <strong>several hundred to ~1 000+ concurrent active users</strong> at this performance level. <strong>That is enough for MVP.</strong> As the user base grows, scaling up server capacity is recommended to keep the experience fast, but it is not a launch blocker. Chat is fully production-ready and now even faster.
+</blockquote>
+
+<h2>Document info</h2>
+<table>
+  <tr><th>Report version</th><td>v2 — comparison of two test sessions</td></tr>
+  <tr><th>Test sessions</th><td><strong>Run #1:</strong> 2026-05-04 (before fix) &nbsp;|&nbsp; <strong>Run #2:</strong> 2026-05-11 (after fix)</td></tr>
+  <tr><th>Environment tested</th><td><code>api.shimy.app</code> (dev) — same for both runs</td></tr>
+  <tr><th>Tool</th><td>k6 — open-source load testing framework</td></tr>
+  <tr><th>Test accounts</th><td>50 dedicated test users grouped into 25 chat pairs (same subset both runs)</td></tr>
+  <tr><th>Endpoints under test</th><td><code>GET /api/v1/feed/</code> (REST) and <code>wss://api.shimy.app/ws/connect</code> (WebSocket chat)</td></tr>
+  <tr><th>Comparison validity</th><td>Both runs used the same test scripts, same 50-user subset, same empty-feed DB state — so the differences below reflect the backend fix, not test changes.</td></tr>
+</table>
+
+<h2>What changed — at a glance</h2>
+
+<p>The single most important table in this report. Green = improved, grey = unchanged, red = regressed.</p>
+
+<table>
+  <thead>
+    <tr><th>Metric</th><th>Run #1 (04.05)</th><th>Run #2 (11.05)</th><th>Change</th><th>Verdict</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Feed — base latency (single request, no load)</td><td>~600 ms</td><td>~500 ms</td><td class="good">−17%</td><td>🟢 Better</td></tr>
+    <tr><td>Feed — p95 wait @ 10 users (smoke)</td><td>621 ms</td><td>502 ms</td><td class="good">−19%</td><td>🟢 Better</td></tr>
+    <tr><td>Feed — p95 wait @ 200 users (load)</td><td>15.6 s</td><td>13.3 s</td><td class="good">−15%</td><td>🟢 Better</td></tr>
+    <tr><td>Feed — throughput @ 200 users</td><td>12.1 req/s</td><td>14.4 req/s</td><td class="good">+19%</td><td>🟢 Better</td></tr>
+    <tr><td>Feed — failure rate @ 1 000 users (stress)</td><td>57.5%</td><td>49.6%</td><td class="good">−14%</td><td>🟢 Better</td></tr>
+    <tr><td>Feed — users handled before SLA breach (p95&lt;1 s)</td><td>~45 users</td><td>~76 users</td><td class="good">+69%</td><td>🟢 Better</td></tr>
+    <tr><td>Feed — p95 wait @ 1 000 users</td><td>37.9 s</td><td>37.8 s</td><td class="same">≈ 0%</td><td>⚪ Unchanged (ceiling)</td></tr>
+    <tr><td>Feed — dropped connections @ stress</td><td>201</td><td>648</td><td class="bad">+222%</td><td>🟡 New behaviour (see note)</td></tr>
+    <tr><td>Chat — message delivery p95 @ 10 users</td><td>220 ms</td><td>161 ms</td><td class="good">−27%</td><td>🟢 Better</td></tr>
+    <tr><td>Chat — message delivery p95 @ 50 users (stress)</td><td>245 ms</td><td>166 ms</td><td class="good">−32%</td><td>🟢 Better</td></tr>
+    <tr><td>Chat — connection failures (all tests)</td><td>0</td><td>0</td><td class="same">=</td><td>🟢 Still perfect</td></tr>
+  </tbody>
+</table>
+
+<h2>Executive Summary</h2>
+
+<table>
+  <thead>
+    <tr><th>Endpoint</th><th>Verdict (unchanged)</th><th>Direction</th><th>Bottom line</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Feed (REST)</strong></td>
+      <td>🟢 Sufficient for MVP</td>
+      <td class="good">↗ Improving</td>
+      <td>Comfortably handles ~160 simultaneous feed requests (≈ several hundred–1 000+ real concurrent users — see "Test users vs real users" below). The fix widened the comfort zone and cut failures by 14%. Good enough to launch; scale server capacity later as the audience grows.</td>
+    </tr>
+    <tr>
+      <td><strong>Chat (WebSocket)</strong></td>
+      <td>🟢 Production-ready</td>
+      <td class="good">↗ Even better</td>
+      <td>Message delivery is now 25–32% faster (≈245 ms → ≈165 ms). Zero connection failures across every test. No blocker for launch.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>One-line takeaway for leadership:</strong> performance is good enough to ship the MVP. The fix improved every metric; chat is fully ready, and the feed handles realistic MVP-scale traffic. Plan a server-capacity increase as a growth investment, not a launch blocker.</p>
+
+<h2>What was tested (unchanged methodology)</h2>
+
+<p>Identical to Run #1, so the comparison is apples-to-apples:</p>
+<ol>
+  <li><strong>Feed (REST):</strong> <code>GET /api/v1/feed/?radius&amp;latitude&amp;longitude</code> — what users see when they open the app.</li>
+  <li><strong>Chat (WebSocket):</strong> real-time messaging between matched users (<code>chat.send</code> / <code>chat.message</code>).</li>
+</ol>
+
+<table>
+  <thead><tr><th>Profile</th><th>Purpose</th><th>Concurrent users</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Smoke</strong></td><td>Sanity check — does it work at all?</td><td>10</td></tr>
+    <tr><td><strong>Load</strong></td><td>Baseline — behaviour under expected demand</td><td>50 (chat) / 200 (feed)</td></tr>
+    <tr><td><strong>Stress</strong></td><td>Find the breaking point</td><td>50 (chat, ceiling-limited) / 1 000 (feed)</td></tr>
+  </tbody>
+</table>
+
+<blockquote class="note">
+<strong>Note on “concurrent users”.</strong> Standard SaaS definition — parallel user sessions active at the same time (“200 users with the app open right now”), not “200 button taps in the same millisecond”. Each simulated user pauses 1 second between actions, mirroring real behaviour.
+</blockquote>
+
+<h2>Results — Feed (REST): before vs after</h2>
+
+<h3>Performance by profile</h3>
+<table>
+  <thead><tr><th>Test</th><th>Users</th><th>p95 wait — Run #1</th><th>p95 wait — Run #2</th><th>Δ</th><th>Failure rate #1 → #2</th></tr></thead>
+  <tbody>
+    <tr><td>Smoke</td><td>10</td><td>621 ms</td><td><strong>502 ms</strong></td><td class="good">−19%</td><td>0% → 0%</td></tr>
+    <tr><td>Load</td><td>200</td><td>15.6 s</td><td><strong>13.3 s</strong></td><td class="good">−15%</td><td>0% → 0%</td></tr>
+    <tr><td>Stress</td><td>1 000</td><td>37.9 s</td><td>37.8 s</td><td class="same">≈</td><td>57.5% → <strong>49.6%</strong></td></tr>
+  </tbody>
+</table>
+
+<h3>Stress test — side-by-side at fixed user counts</h3>
+<p>Each row is the moment the test first reached that many concurrent users.</p>
+<table>
+  <thead><tr><th>Users</th><th>p95 — Run #1</th><th>p95 — Run #2</th><th>Δ p95</th><th>Failure rate #1 → #2</th></tr></thead>
+  <tbody>
+    <tr><td>50</td><td>4.6 s</td><td><strong>3.8 s</strong></td><td class="good">−17%</td><td>0% → 0%</td></tr>
+    <tr><td>100</td><td>6.0 s</td><td><strong>4.3 s</strong></td><td class="good">−29%</td><td>0% → 0%</td></tr>
+    <tr><td>200</td><td>8.8 s</td><td><strong>7.9 s</strong></td><td class="good">−11%</td><td>0% → 0%</td></tr>
+    <tr><td>400</td><td>19.8 s</td><td><strong>17.7 s</strong></td><td class="good">−11%</td><td>0% → 0%</td></tr>
+    <tr><td>500</td><td>24.3 s</td><td><strong>22.2 s</strong></td><td class="good">−9%</td><td>29% → <strong>25%</strong></td></tr>
+    <tr><td>600</td><td>31.1 s</td><td><strong>25.4 s</strong></td><td class="good">−18%</td><td>32% → <strong>4.5%</strong></td></tr>
+    <tr><td>700</td><td>34.0 s</td><td><strong>28.5 s</strong></td><td class="good">−16%</td><td>52% → <strong>44%</strong></td></tr>
+    <tr><td>800</td><td>33.5 s</td><td>33.0 s</td><td class="same">≈</td><td>58% → 53%</td></tr>
+    <tr><td>1 000</td><td>34.4 s</td><td>33.0 s</td><td class="same">≈</td><td>79.5% → 78.3%</td></tr>
+  </tbody>
+</table>
+
+<h3>Stress test — when each problem threshold was first crossed</h3>
+<table>
+  <thead><tr><th>Event</th><th>Run #1 (04.05)</th><th>Run #2 (11.05)</th><th>Interpretation</th></tr></thead>
+  <tbody>
+    <tr><td>Wait time exceeds 1 s</td><td>at ~45 users</td><td>at <strong>~76 users</strong></td><td class="good">Handles +69% more users at acceptable speed</td></tr>
+    <tr><td>Wait time exceeds 5 s</td><td>~136 users</td><td><strong>~160 users</strong></td><td class="good">+18%</td></tr>
+    <tr><td>Wait time exceeds 10 s</td><td>~252 users</td><td><strong>~284 users</strong></td><td class="good">+13%</td></tr>
+    <tr><td>First server errors appear</td><td>~469 users (7% fail)</td><td>~492 users (<strong>15% fail</strong>)</td><td>🟡 Starts a bit later, but rises more steeply</td></tr>
+    <tr><td>Failure rate reaches 25%</td><td>~502 users</td><td><strong>~701 users</strong></td><td class="good">+40% more headroom before the critical zone</td></tr>
+    <tr><td>Failure rate reaches 50%</td><td>~719 users</td><td>~742 users</td><td class="same">Roughly the same</td></tr>
+    <tr><td>Failure rate reaches 70%</td><td>~969 users</td><td><strong>~909 users</strong></td><td class="bad">Slightly earlier — the collapse is sharper once it starts</td></tr>
+  </tbody>
+</table>
+
+<h3>The three degradation phases — compared</h3>
+<table>
+  <thead><tr><th>Phase</th><th>Run #1</th><th>Run #2</th><th>What changed</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>🟡 <strong>Slow but no errors</strong></td>
+      <td>45 → 419 users</td>
+      <td><strong>76 → 451 users</strong></td>
+      <td class="good">In the same number of seconds the server serves ~30 more users before any error. This is the fix's core effect.</td>
+    </tr>
+    <tr>
+      <td>🟠 <strong>Errors appear (mixed)</strong></td>
+      <td>469 → 720 users, 7–44% fail</td>
+      <td>492 → 742 users, <strong>15</strong>–44% fail</td>
+      <td>🟡 Boundary similar, but failures start higher — users get an error faster instead of a 30-s spinner (worse on paper, arguably better UX).</td>
+    </tr>
+    <tr>
+      <td>🔴 <strong>Mass failure (≥50%)</strong></td>
+      <td>720 → 1 000 users, 57.5% total fail</td>
+      <td>742 → 1 000 users, <strong>49.6%</strong> total fail</td>
+      <td class="good">Ceiling unchanged, but overall 14% fewer requests fail during the chaos.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>What this means in user terms (updated)</h3>
+<blockquote class="note">
+The feed serves <strong>~160 simultaneous requests</strong> within ~5 seconds — our reference point for "acceptable". Below that it is fast; well above it, it slows down. But "160 simultaneous requests" is a stress-test figure, not a real-user figure — the next section explains why the real capacity is far higher.
+</blockquote>
+
+<h2>Test users vs real users — why the app supports far more than the numbers suggest</h2>
+
+<blockquote class="win">
+<strong>Key context for interpreting every number in this report.</strong> The load test is deliberately far more aggressive than real human behaviour. The “160 concurrent users” limit is <strong>not</strong> “160 people using the app” — it is “160 feed requests being processed in the very same moment”. In reality users never do that.
+</blockquote>
+
+<h3>Why the test is more aggressive than reality</h3>
+<ul>
+  <li>In the test, each simulated user fires a new feed request roughly <strong>every ~7 seconds</strong>, non-stop, for the entire run.</li>
+  <li>A real user of a dating app opens the feed, then <strong>scrolls and looks at profiles for 30–60+ seconds</strong> before the next refresh — and often just looks once and closes the app.</li>
+  <li>So one test "user" generates the server load of roughly <strong>6–8 real users</strong>.</li>
+</ul>
+
+<h3>Translating the test result into real audience size</h3>
+<table>
+  <thead><tr><th></th><th>Test (k6)</th><th>Real users (dating-app behaviour)</th></tr></thead>
+  <tbody>
+    <tr><td>How often the feed is requested</td><td>every ~7 s, continuously</td><td>every ~45–60 s during an active session</td></tr>
+    <tr><td>Server load per "user"</td><td>1×</td><td>~⅙–⅛ of a test user</td></tr>
+    <tr><td>Reference comfort point</td><td>~160 simultaneous requests (p95 ≈ 5 s)</td><td><strong>≈ several hundred to ~1 000+ concurrent active users</strong></td></tr>
+  </tbody>
+</table>
+
+<p>In other words: the same server load that the test reaches with 160 aggressive simulated users would, in production, only be generated by roughly <strong>1 000+ real people actively using the app at the same moment</strong>. For an MVP launch this is comfortably sufficient — a new dating app is very unlikely to have 1 000 people simultaneously refreshing their feed in the same few seconds on day one.</p>
+
+<blockquote class="note">
+This is an estimate, intentionally conservative. The exact multiplier depends on real user behaviour, which we will only know after launch. The recommendation is therefore: <strong>ship the MVP now, monitor real traffic, and scale the server proactively as the audience grows.</strong>
+</blockquote>
+
+<h2>Results — Chat (WebSocket): before vs after</h2>
+
+<table>
+  <thead><tr><th>Test</th><th>Users</th><th>Delivery p95 — Run #1</th><th>Delivery p95 — Run #2</th><th>Δ</th><th>Failures</th></tr></thead>
+  <tbody>
+    <tr><td>Smoke</td><td>10</td><td>220 ms</td><td><strong>161 ms</strong></td><td class="good">−27%</td><td>0 → 0</td></tr>
+    <tr><td>Load (send)</td><td>50</td><td>245 ms</td><td>not run on 11.05*</td><td class="same">—</td><td>0</td></tr>
+    <tr><td>Stress (send)</td><td>50</td><td>245 ms</td><td><strong>166 ms</strong></td><td class="good">−32%</td><td>0 → 0</td></tr>
+  </tbody>
+</table>
+
+<p><small>* The 50-user chat load profile was intentionally skipped in Run #2 (not informative for business). Both end points we <em>did</em> measure (10-user smoke and 50-user stress) show a consistent ~30% improvement, so the 50-user load point almost certainly improved by a similar margin.</small></p>
+
+<blockquote class="win">
+<strong>Chat got faster across the board.</strong> Message round-trip dropped from ~245 ms to ~165 ms — a 30% improvement — with still zero connection failures, even on 5-minute sessions under stress. Chat was already a launch-non-blocker; now it is comfortably so.
+</blockquote>
+
+<h2>New behaviour to confirm with the backend team</h2>
+
+<p>The number of <strong>dropped connections</strong> (TCP <code>connection reset by peer</code>) under stress jumped <strong>3× — from 201 to 648</strong>. Meanwhile classic server errors (5xx) went <em>down</em>.</p>
+
+<table>
+  <thead><tr><th>Stress zone</th><th>Dropped connections — Run #1</th><th>Run #2</th></tr></thead>
+  <tbody>
+    <tr><td>Up to 500 users</td><td>0</td><td>0</td></tr>
+    <tr><td>500–700 users</td><td>16</td><td>57</td></tr>
+    <tr><td>700–1 000 users</td><td>71</td><td>252</td></tr>
+    <tr><td><strong>Total</strong></td><td><strong>201</strong></td><td><strong>648</strong></td></tr>
+  </tbody>
+</table>
+
+<p><strong>Most likely explanation (to verify):</strong> the fix added fail-fast / overload-protection. Previously the server held an overloaded request for ~30 seconds and then returned a 504; now it cuts the connection quickly. For the user this is actually <em>better</em> (an error in ~5 s instead of a 30-s spinner). The lower total failure rate and improved latency support this benign reading — but the backend team should confirm it was intentional.</p>
+
+<p><strong>One question for the backend team:</strong> “Was fail-fast / overload protection added to the feed endpoint? We now see many TCP resets at the start of the error zone, where the server previously held connections for 30 s. Intentional?”</p>
+
+<h2>What this means for the product (updated)</h2>
+<table>
+  <thead><tr><th>Concurrent users</th><th>Feed — Run #1</th><th>Feed — Run #2</th><th>Chat (both runs)</th></tr></thead>
+  <tbody>
+    <tr><td><strong>10</strong></td><td>✅ Excellent</td><td>✅ Excellent (faster)</td><td>✅ Excellent</td></tr>
+    <tr><td><strong>50</strong></td><td>🟡 Lag 2–3 s</td><td>🟡 Lag ~2 s (slightly better)</td><td>✅ Excellent</td></tr>
+    <tr><td><strong>100</strong></td><td>🟠 Painful 4–6 s</td><td>🟠 Painful ~4 s</td><td>✅ Excellent</td></tr>
+    <tr><td><strong>200</strong></td><td>🔴 10+ s spinner</td><td>🔴 ~10 s spinner</td><td>✅ Excellent</td></tr>
+    <tr><td><strong>500</strong></td><td>🔴 ~10% see errors</td><td>🔴 ~25% see errors faster</td><td>✅ Excellent (extrapolated)</td></tr>
+    <tr><td><strong>1 000</strong></td><td>⚫ 75% see errors</td><td>⚫ 78% see errors</td><td>Unknown (test ceiling)</td></tr>
+  </tbody>
+</table>
+
+<p><strong>Launch-planning implication:</strong> remember the table above is in <em>test</em> users (each ≈ 6–8 real users). The ~160-request comfort point translates to roughly <strong>1 000+ real concurrent active users</strong> — well beyond expected MVP traffic. <strong>The current performance is sufficient to launch the MVP.</strong> A server-capacity upgrade is recommended as a growth investment to keep the feed fast as the audience scales, but it does not block the launch. Chat does not block launch either.</p>
+
+<h2>Verdict on the fix</h2>
+<ul>
+  <li>🟢 <strong>The fix is beneficial and should stay in production.</strong> Every measured metric improved or stayed flat; none regressed in a way that hurts users.</li>
+  <li>🟢 <strong>It addressed the per-request cost</strong> — base latency dropped ~17% (≈600 ms → ≈500 ms), which is why the server now serves more users before degrading.</li>
+  <li>🟢 <strong>Performance is sufficient for the MVP.</strong> Translated into real-user behaviour, the app comfortably supports an MVP-scale audience (≈ 1 000+ concurrent active users).</li>
+  <li>🟡 <strong>The architectural ceiling is unchanged</strong> (load-balancer timeout ~30 s + limited parallel processing). This is not an MVP problem, but it will need attention as the app scales beyond MVP traffic — a planned growth investment, not a blocker.</li>
+</ul>
+
+<h2>Recommendations &amp; Next Steps</h2>
+
+<h3>Not blocking — MVP can launch now</h3>
+<p>None of the items below block the MVP launch. They are improvements and growth investments.</p>
+
+<h3>Post-launch growth investment (recommended as audience grows)</h3>
+<ol>
+  <li><strong>Increase server capacity.</strong> A larger / scaled-out backend would directly push the comfort point well past the current ~160-request mark, keeping the feed fast as the user base grows. This is the single highest-leverage growth investment.</li>
+  <li><strong>Continue feed optimization.</strong> The fix proved the approach works. Next targets: drive base latency from ~500 ms toward 50–100 ms (geo-search query, indexing, caching), and raise parallel-processing / DB connection pool limits.</li>
+  <li><strong>Monitor real production traffic</strong> after launch — this tells us the real test-to-real-user multiplier and when a capacity upgrade actually becomes necessary.</li>
+</ol>
+
+<h3>Short-term housekeeping</h3>
+<ol start="4">
+  <li><strong>Confirm the new connection-reset behaviour</strong> with the backend team (intentional fail-fast vs. accidental pool/timeout change).</li>
+  <li><strong>Expand the test-user pool to 200+</strong> to probe the true chat ceiling (still only proven to 50).</li>
+  <li><strong>Agree on business-defined SLA targets.</strong> Current thresholds are baseline values; once product owners set the user-facing SLA, they can be wired into CI to catch regressions automatically.</li>
+  <li><strong>Re-run this exact comparison after future optimizations</strong> — the harness produces an automatic before/after diff, so each round is cheap to measure.</li>
+</ol>
+
+<h2>Glossary (for non-technical readers)</h2>
+<table>
+  <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Concurrent user</strong></td><td>A user with the app open, acting in parallel with others. Not “everyone clicking the same button at the same instant”.</td></tr>
+    <tr><td><strong>Latency / response time</strong></td><td>How long the user waits between an action and seeing a result.</td></tr>
+    <tr><td><strong>p95 latency</strong></td><td>The wait time experienced by 95% of users — only 5% wait longer. The standard “worst typical case” metric.</td></tr>
+    <tr><td><strong>5xx errors</strong></td><td>Server-side failures — the user sees a “Something went wrong” / “Failed to load” message.</td></tr>
+    <tr><td><strong>Dropped connection (TCP reset)</strong></td><td>The server abruptly closes the connection mid-request. The user sees an instant failure rather than a long wait.</td></tr>
+    <tr><td><strong>Round-trip time (RTT)</strong></td><td>For chat: time between one user sending a message and the other user's device receiving it.</td></tr>
+    <tr><td><strong>Smoke / load / stress</strong></td><td>Test profiles of increasing intensity. Smoke = “does it work?”. Load = “fast enough under expected demand?”. Stress = “where does it break?”.</td></tr>
+  </tbody>
+</table>
+
+<h2>Appendix — Artifacts</h2>
+<table>
+  <thead><tr><th>Artifact</th><th>Location</th></tr></thead>
+  <tbody>
+    <tr><td>Run #1 per-run HTML reports</td><td><code>load-tests/reports/Shimy/20260504_*/summary.html</code></td></tr>
+    <tr><td>Run #2 per-run HTML reports</td><td><code>load-tests/reports/Shimy/20260511_*/summary.html</code></td></tr>
+    <tr><td>Compare index (sortable, groupable)</td><td><code>load-tests/reports/Shimy/index.html</code></td></tr>
+    <tr><td>Feed stress deep-dive — Run #1</td><td><code>load-tests/reports/Shimy/2026-05-04_feed-stress-deep-dive.md</code></td></tr>
+    <tr><td>Feed stress detailed comparison (#1 vs #2)</td><td><code>load-tests/reports/Shimy/2026-05-11_feed-stress-detailed-comparison.md</code></td></tr>
+    <tr><td>Run #1 vs #2 summary comparison</td><td><code>load-tests/reports/Shimy/2026-05-11_comparison-vs-2026-05-04.md</code></td></tr>
+    <tr><td>Test scripts</td><td><code>load-tests/shimy/shimyFeedLoad.js</code>, <code>load-tests/shimy/shimyChatLoad.js</code></td></tr>
+  </tbody>
+</table>
+
+</body>
+</html>

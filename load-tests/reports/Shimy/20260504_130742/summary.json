@@ -1,0 +1,777 @@
+{
+    "metrics": {
+        "socket_connection_failures": {
+            "rate": 0,
+            "count": 0,
+            "thresholds": {
+                "count<5": false
+            }
+        },
+        "http_req_duration": {
+            "p(50)": 527.8555,
+            "p(90)": 616.4516000000001,
+            "p(95)": 701.3100999999999,
+            "p(99)": 716.84246,
+            "avg": 562.2616599999999,
+            "min": 504.695,
+            "med": 527.8555,
+            "max": 717.208
+        },
+        "http_req_tls_handshaking": {
+            "avg": 3.09036,
+            "min": 0,
+            "med": 0,
+            "max": 154.518,
+            "p(50)": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "p(99)": 78.80417999999993
+        },
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 50,
+            "value": 0
+        },
+        "vus_max": {
+            "value": 50,
+            "min": 50,
+            "max": 50
+        },
+        "ws_sessions": {
+            "count": 100,
+            "rate": 0.16991369933686626
+        },
+        "ws_msgs_sent": {
+            "rate": 90.53681555465582,
+            "count": 53284
+        },
+        "checks": {
+            "passes": 50,
+            "fails": 0,
+            "value": 1
+        },
+        "http_req_duration{expected_response:true}": {
+            "max": 717.208,
+            "p(50)": 527.8555,
+            "p(90)": 616.4516000000001,
+            "p(95)": 701.3100999999999,
+            "p(99)": 716.84246,
+            "avg": 562.2616599999999,
+            "min": 504.695,
+            "med": 527.8555
+        },
+        "iterations": {
+            "count": 50,
+            "rate": 0.08495684966843313
+        },
+        "http_req_blocked": {
+            "p(99)": 197.11179999999982,
+            "avg": 7.741499999999998,
+            "min": 0.003,
+            "med": 0.012,
+            "max": 386.291,
+            "p(50)": 0.012,
+            "p(90)": 0.020200000000000003,
+            "p(95)": 0.023549999999999998
+        },
+        "data_sent": {
+            "count": 5891851,
+            "rate": 10011.061993516149
+        },
+        "data_received": {
+            "rate": 14672.20765661578,
+            "count": 8635094
+        },
+        "ws_msgs_received": {
+            "rate": 90.01857877167838,
+            "count": 52979
+        },
+        "http_req_waiting": {
+            "min": 504.446,
+            "med": 527.6279999999999,
+            "max": 716.885,
+            "p(50)": 527.6279999999999,
+            "p(90)": 615.6945000000001,
+            "p(95)": 701.0604,
+            "p(99)": 716.5959,
+            "avg": 561.99842
+        },
+        "ws_connecting": {
+            "p(50)": 473.356417,
+            "p(90)": 554.7101203,
+            "p(95)": 593.4350374999999,
+            "p(99)": 606.8253829199999,
+            "avg": 486.8946595599999,
+            "min": 420.264959,
+            "med": 473.356417,
+            "max": 675.816792
+        },
+        "socket_session_duration": {
+            "med": 300498,
+            "max": 300605,
+            "p(50)": 300498,
+            "p(90)": 300587.4,
+            "p(95)": 300600.3,
+            "p(99)": 300604.02,
+            "avg": 300489.98,
+            "min": 300418,
+            "thresholds": {
+                "avg>2000": false
+            }
+        },
+        "http_req_receiving": {
+            "max": 0.784,
+            "p(50)": 0.1785,
+            "p(90)": 0.2897,
+            "p(95)": 0.3091,
+            "p(99)": 0.5688899999999998,
+            "avg": 0.19825999999999996,
+            "min": 0.039,
+            "med": 0.1785
+        },
+        "chat_typing_sent": {
+            "count": 53284,
+            "rate": 90.53681555465582
+        },
+        "socket_messages_received": {
+            "count": 52979,
+            "rate": 90.01857877167838
+        },
+        "chat_delivery_latency_ms": {
+            "p(90)": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(50)": 0,
+            "thresholds": {
+                "p(95)<2000": false
+            }
+        },
+        "vus": {
+            "value": 2,
+            "min": 0,
+            "max": 50
+        },
+        "http_req_sending": {
+            "p(95)": 0.14804999999999996,
+            "p(99)": 0.26063000000000003,
+            "avg": 0.06497999999999998,
+            "min": 0.015,
+            "med": 0.0515,
+            "max": 0.267,
+            "p(50)": 0.0515,
+            "p(90)": 0.0995
+        },
+        "socket_sessions_ok": {
+            "rate": 0.08495684966843313,
+            "count": 50
+        },
+        "iteration_duration": {
+            "min": 301423.366458,
+            "med": 301502.5517915,
+            "max": 301610.300459,
+            "p(50)": 301502.5517915,
+            "p(90)": 301592.36885,
+            "p(95)": 301604.25822255,
+            "p(99)": 301608.92366092,
+            "avg": 301494.82330665994
+        },
+        "http_reqs": {
+            "count": 50,
+            "rate": 0.08495684966843313
+        },
+        "http_req_connecting": {
+            "avg": 2.93986,
+            "min": 0,
+            "med": 0,
+            "max": 146.993,
+            "p(50)": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "p(99)": 74.96642999999993
+        },
+        "ws_session_duration": {
+            "med": 300501.51775,
+            "max": 300608.581917,
+            "p(50)": 300501.51775,
+            "p(90)": 300591.35254560004,
+            "p(95)": 300603.247892,
+            "p(99)": 300607.61780084,
+            "avg": 300493.67709168,
+            "min": 300421.886459
+        }
+    },
+    "setup_data": {
+        "authPool": [
+            {
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3ZmFjYTNkOS0zODc2LTQwMGUtODYzZS0xMWEyNTc5M2RmOTYiLCJleHAiOjE3Nzg0OTQwNjMsImlhdCI6MTc3Nzg4OTI2MywidHlwZSI6InJlZnJlc2gifQ.7T_UY-CRTkv-dKtWNP0U6jZV1aEXqLA9YcDQvae4-Bw",
+                "user": {
+                    "password": "boloto12",
+                    "phone_number": "+380000000001",
+                    "id": 1,
+                    "pair_id": 1
+                },
+                "user_id": "7faca3d9-3876-400e-863e-11a25793df96",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3ZmFjYTNkOS0zODc2LTQwMGUtODYzZS0xMWEyNTc5M2RmOTYiLCJleHAiOjE3Nzc4OTEwNjMsImlhdCI6MTc3Nzg4OTI2MywidHlwZSI6ImFjY2VzcyJ9.SFQ1Z0kpMM4eTvWMO7RAzx3e3OTSf5U7GnfbdvOk08k"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhODBjODg1Zi1kZGIzLTQyMWUtOGRjZi04NWQ2NzNhYjQ1MjgiLCJleHAiOjE3Nzc4OTEwNjQsImlhdCI6MTc3Nzg4OTI2NCwidHlwZSI6ImFjY2VzcyJ9.UiJqjdl0EV7eKOP61wX4hayxd3V6lTTKixqwp1tICII",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhODBjODg1Zi1kZGIzLTQyMWUtOGRjZi04NWQ2NzNhYjQ1MjgiLCJleHAiOjE3Nzg0OTQwNjQsImlhdCI6MTc3Nzg4OTI2NCwidHlwZSI6InJlZnJlc2gifQ.lD6YlZos8aeYf_Nxp_ZQGOGjnQtB8fpdQn7WS8K1_I8",
+                "user": {
+                    "id": 2,
+                    "pair_id": 1,
+                    "password": "boloto12",
+                    "phone_number": "+380000000002"
+                },
+                "user_id": "a80c885f-ddb3-421e-8dcf-85d673ab4528"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmZjA1NjBlMi0yMDJhLTQyMTEtOTJmNC1lNmI4OTBjMjcxZDIiLCJleHAiOjE3Nzc4OTEwNjQsImlhdCI6MTc3Nzg4OTI2NCwidHlwZSI6ImFjY2VzcyJ9.WPCTkLbbGtPl7E0YGPdizl-kQShqIkO3wjHOFjBYOo4",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmZjA1NjBlMi0yMDJhLTQyMTEtOTJmNC1lNmI4OTBjMjcxZDIiLCJleHAiOjE3Nzg0OTQwNjQsImlhdCI6MTc3Nzg4OTI2NCwidHlwZSI6InJlZnJlc2gifQ.x_jUUWRlUo6Xhdm0cFaYIfSeArR4UbqYmU7KkhHQdT4",
+                "user": {
+                    "id": 3,
+                    "pair_id": 2,
+                    "password": "boloto12",
+                    "phone_number": "+380000000003"
+                },
+                "user_id": "ff0560e2-202a-4211-92f4-e6b890c271d2"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4MzBhZTViMS04MzRhLTRlZjItYWYwNi1mMjRiMDI0OTBiZGYiLCJleHAiOjE3Nzc4OTEwNjUsImlhdCI6MTc3Nzg4OTI2NSwidHlwZSI6ImFjY2VzcyJ9._Txktue_m1AOucBMn_-6w-47QGZsvBSH48sS1yHe9qo",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4MzBhZTViMS04MzRhLTRlZjItYWYwNi1mMjRiMDI0OTBiZGYiLCJleHAiOjE3Nzg0OTQwNjUsImlhdCI6MTc3Nzg4OTI2NSwidHlwZSI6InJlZnJlc2gifQ.wbTy58jynEZ9d6WOPDDGWwm7AjCKC__TNgfH1_fj41c",
+                "user": {
+                    "id": 4,
+                    "pair_id": 2,
+                    "password": "boloto12",
+                    "phone_number": "+380000000004"
+                },
+                "user_id": "830ae5b1-834a-4ef2-af06-f24b02490bdf"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzllMDYxMy01M2QzLTQxY2ItODdlYS1mNDAwMGMyMjk5NWQiLCJleHAiOjE3Nzc4OTEwNjUsImlhdCI6MTc3Nzg4OTI2NSwidHlwZSI6ImFjY2VzcyJ9.EDJkn16BC9dHZp7Gn7rtZJ120jaYmynJUF9lcyF9Fwc",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzllMDYxMy01M2QzLTQxY2ItODdlYS1mNDAwMGMyMjk5NWQiLCJleHAiOjE3Nzg0OTQwNjUsImlhdCI6MTc3Nzg4OTI2NSwidHlwZSI6InJlZnJlc2gifQ.O4EcEttJ22x_x1w2b66o0JrQogjZBQmzeAS5OhkLkvc",
+                "user": {
+                    "id": 5,
+                    "pair_id": 3,
+                    "password": "boloto12",
+                    "phone_number": "+380000000005"
+                },
+                "user_id": "039e0613-53d3-41cb-87ea-f4000c22995d"
+            },
+            {
+                "user": {
+                    "pair_id": 3,
+                    "password": "boloto12",
+                    "phone_number": "+380000000006",
+                    "id": 6
+                },
+                "user_id": "ab3e1d95-5674-41dd-83e1-2b3385987c39",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYjNlMWQ5NS01Njc0LTQxZGQtODNlMS0yYjMzODU5ODdjMzkiLCJleHAiOjE3Nzc4OTEwNjYsImlhdCI6MTc3Nzg4OTI2NiwidHlwZSI6ImFjY2VzcyJ9.jUy3dBLJTyjxmTxjkIQhrz2IcQIPCWSRe56HbRuNAA4",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYjNlMWQ5NS01Njc0LTQxZGQtODNlMS0yYjMzODU5ODdjMzkiLCJleHAiOjE3Nzg0OTQwNjYsImlhdCI6MTc3Nzg4OTI2NiwidHlwZSI6InJlZnJlc2gifQ.0DoD1LZWt8rM0iMUPbolwjT2TZDRmsu2hraFlD_n8UE"
+            },
+            {
+                "user": {
+                    "id": 7,
+                    "pair_id": 4,
+                    "password": "boloto12",
+                    "phone_number": "+380000000007"
+                },
+                "user_id": "409281d0-c186-45c5-8c3c-274ac8f35eb4",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MDkyODFkMC1jMTg2LTQ1YzUtOGMzYy0yNzRhYzhmMzVlYjQiLCJleHAiOjE3Nzc4OTEwNjcsImlhdCI6MTc3Nzg4OTI2NywidHlwZSI6ImFjY2VzcyJ9.mCAJ7Jbvd6T9q6uQHRS6NpElWB-B8pkgejHOWdwi89M",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MDkyODFkMC1jMTg2LTQ1YzUtOGMzYy0yNzRhYzhmMzVlYjQiLCJleHAiOjE3Nzg0OTQwNjcsImlhdCI6MTc3Nzg4OTI2NywidHlwZSI6InJlZnJlc2gifQ.cMw7itN-8qUpUhHwno2X3cOggxeMV92gOYV_uFYySaY"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5MTM2NjkwNy1hYmJiLTQxMDktOWZhZC1hMGY3YzE5YTE0Y2MiLCJleHAiOjE3Nzc4OTEwNjcsImlhdCI6MTc3Nzg4OTI2NywidHlwZSI6ImFjY2VzcyJ9.EoY6jQPNMvB62psXZcP6pmYy7Rwu8acrMNtjWJ8HfAI",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5MTM2NjkwNy1hYmJiLTQxMDktOWZhZC1hMGY3YzE5YTE0Y2MiLCJleHAiOjE3Nzg0OTQwNjcsImlhdCI6MTc3Nzg4OTI2NywidHlwZSI6InJlZnJlc2gifQ.7Z6Bi6ihBJJ1pxeKJw5C8GNP_eoo0Q1cwbA9tN2oFm4",
+                "user": {
+                    "phone_number": "+380000000008",
+                    "id": 8,
+                    "pair_id": 4,
+                    "password": "boloto12"
+                },
+                "user_id": "91366907-abbb-4109-9fad-a0f7c19a14cc"
+            },
+            {
+                "user": {
+                    "id": 9,
+                    "pair_id": 5,
+                    "password": "boloto12",
+                    "phone_number": "+380000000009"
+                },
+                "user_id": "9a8b934b-6614-4cc5-af57-e4ed54600a9c",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5YThiOTM0Yi02NjE0LTRjYzUtYWY1Ny1lNGVkNTQ2MDBhOWMiLCJleHAiOjE3Nzc4OTEwNjgsImlhdCI6MTc3Nzg4OTI2OCwidHlwZSI6ImFjY2VzcyJ9.PFxKXSwtonnMx9IMd_zi6vMIjReLljqjWuV8xwrc8oc",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5YThiOTM0Yi02NjE0LTRjYzUtYWY1Ny1lNGVkNTQ2MDBhOWMiLCJleHAiOjE3Nzg0OTQwNjgsImlhdCI6MTc3Nzg4OTI2OCwidHlwZSI6InJlZnJlc2gifQ.Nh-WTdoX5kOinE8xavfFBQw6-uPfhA4WP0jqLxBAtJU"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmYmRkY2Y1Ny1mMTEzLTQ1MzMtYWYxNC04MjY4OGUzM2NkOTAiLCJleHAiOjE3Nzc4OTEwNjgsImlhdCI6MTc3Nzg4OTI2OCwidHlwZSI6ImFjY2VzcyJ9.d0B99dna9JkoMqsogCks3nH8CUm-xhziTuhIxGpywvc",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmYmRkY2Y1Ny1mMTEzLTQ1MzMtYWYxNC04MjY4OGUzM2NkOTAiLCJleHAiOjE3Nzg0OTQwNjgsImlhdCI6MTc3Nzg4OTI2OCwidHlwZSI6InJlZnJlc2gifQ.u5KatENDG7JB5lXlPbyJLe0FTrB9xTLflDd9F60kbCw",
+                "user": {
+                    "id": 10,
+                    "pair_id": 5,
+                    "password": "boloto12",
+                    "phone_number": "+380000000010"
+                },
+                "user_id": "fbddcf57-f113-4533-af14-82688e33cd90"
+            },
+            {
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjOGQ2ZWZiYi05ZGI3LTQwMzMtOGUyYS03OWRlMWQ4N2QyNTciLCJleHAiOjE3Nzg0OTQwNjksImlhdCI6MTc3Nzg4OTI2OSwidHlwZSI6InJlZnJlc2gifQ._jQ_cHfEYbjvm6j17xAUcKLthxkWhEv2OjgT_My-r90",
+                "user": {
+                    "id": 11,
+                    "pair_id": 6,
+                    "password": "boloto12",
+                    "phone_number": "+380000000011"
+                },
+                "user_id": "c8d6efbb-9db7-4033-8e2a-79de1d87d257",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjOGQ2ZWZiYi05ZGI3LTQwMzMtOGUyYS03OWRlMWQ4N2QyNTciLCJleHAiOjE3Nzc4OTEwNjksImlhdCI6MTc3Nzg4OTI2OSwidHlwZSI6ImFjY2VzcyJ9.ekVmv09Ptg4eXhVY_GUr6d_QdfvvCdPisvOiI2e63SM"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNTc0ZjVlMS0xZGI0LTQ5ZDgtYTAwZS00Zjk4ZTAyZjdkYjAiLCJleHAiOjE3Nzc4OTEwNjksImlhdCI6MTc3Nzg4OTI2OSwidHlwZSI6ImFjY2VzcyJ9.qkiGfzak5Xsu0zJglYvLa53mL4TFyIDBL-4BGRr50cM",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNTc0ZjVlMS0xZGI0LTQ5ZDgtYTAwZS00Zjk4ZTAyZjdkYjAiLCJleHAiOjE3Nzg0OTQwNjksImlhdCI6MTc3Nzg4OTI2OSwidHlwZSI6InJlZnJlc2gifQ.eUvnZ61FLyJi_wIC62EwAXrCFfzkM2MLrfpF_UvwxyU",
+                "user": {
+                    "id": 12,
+                    "pair_id": 6,
+                    "password": "boloto12",
+                    "phone_number": "+380000000012"
+                },
+                "user_id": "f574f5e1-1db4-49d8-a00e-4f98e02f7db0"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMjJhMGE1NS1iOTU0LTRhMzUtYTdkZS1mYjAwZWZmZTQ3Y2EiLCJleHAiOjE3Nzc4OTEwNzAsImlhdCI6MTc3Nzg4OTI3MCwidHlwZSI6ImFjY2VzcyJ9.1vIqyFFJ3PnREQ88-g7KMrVDC5DI9oZ6Cp5XktRxD_M",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMjJhMGE1NS1iOTU0LTRhMzUtYTdkZS1mYjAwZWZmZTQ3Y2EiLCJleHAiOjE3Nzg0OTQwNzAsImlhdCI6MTc3Nzg4OTI3MCwidHlwZSI6InJlZnJlc2gifQ.a5GnuvTkcE4Dk8UkN5YCKr3cN3XW5u4Isa_mr-bm8XU",
+                "user": {
+                    "phone_number": "+380000000013",
+                    "id": 13,
+                    "pair_id": 7,
+                    "password": "boloto12"
+                },
+                "user_id": "a22a0a55-b954-4a35-a7de-fb00effe47ca"
+            },
+            {
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwYTdkZDc0Ni1jZWU1LTRhMzYtOTliOC1kY2ExYmU5ZDg1OTUiLCJleHAiOjE3Nzg0OTQwNzEsImlhdCI6MTc3Nzg4OTI3MSwidHlwZSI6InJlZnJlc2gifQ.s87f8n-ZxGP-NL1ATE10tVoNiV9U84aSG9RqaTazYss",
+                "user": {
+                    "pair_id": 7,
+                    "password": "boloto12",
+                    "phone_number": "+380000000014",
+                    "id": 14
+                },
+                "user_id": "0a7dd746-cee5-4a36-99b8-dca1be9d8595",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwYTdkZDc0Ni1jZWU1LTRhMzYtOTliOC1kY2ExYmU5ZDg1OTUiLCJleHAiOjE3Nzc4OTEwNzEsImlhdCI6MTc3Nzg4OTI3MSwidHlwZSI6ImFjY2VzcyJ9.KCPbD-51jqo9RNRaFonL_BB4M2Yn-QIFq1ZAETTmTxk"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMDBlMDEzMy1kYmJlLTQ4YjEtYTkxNS1kZGQ0NDYyZDkyNjAiLCJleHAiOjE3Nzc4OTEwNzEsImlhdCI6MTc3Nzg4OTI3MSwidHlwZSI6ImFjY2VzcyJ9.4pYRkhMgeuCnZqpEsGBpvzkqfp1Xj83sEcT-4tx7z0U",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMDBlMDEzMy1kYmJlLTQ4YjEtYTkxNS1kZGQ0NDYyZDkyNjAiLCJleHAiOjE3Nzg0OTQwNzEsImlhdCI6MTc3Nzg4OTI3MSwidHlwZSI6InJlZnJlc2gifQ._eTQz2PnKUuG0X1sVjljPgNtcaZsXhlWp4i1V0QagFE",
+                "user": {
+                    "id": 15,
+                    "pair_id": 8,
+                    "password": "boloto12",
+                    "phone_number": "+380000000015"
+                },
+                "user_id": "a00e0133-dbbe-48b1-a915-ddd4462d9260"
+            },
+            {
+                "user_id": "8e79bbe3-3968-4c9a-9c9a-9d7c8ec6f216",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4ZTc5YmJlMy0zOTY4LTRjOWEtOWM5YS05ZDdjOGVjNmYyMTYiLCJleHAiOjE3Nzc4OTEwNzIsImlhdCI6MTc3Nzg4OTI3MiwidHlwZSI6ImFjY2VzcyJ9.J0qQ5WiZoH8nHurMZbA7hPDxsDy3KlhtgEwDwbqQOcI",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4ZTc5YmJlMy0zOTY4LTRjOWEtOWM5YS05ZDdjOGVjNmYyMTYiLCJleHAiOjE3Nzg0OTQwNzIsImlhdCI6MTc3Nzg4OTI3MiwidHlwZSI6InJlZnJlc2gifQ.DQIbwyflaWMrLjcAMmZiKsICpgbHSTm_QZ3-WHuqY9g",
+                "user": {
+                    "id": 16,
+                    "pair_id": 8,
+                    "password": "boloto12",
+                    "phone_number": "+380000000016"
+                }
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3M2QwNDVmNS0zYjQ5LTQ3MTYtOGI1Zi1jYTcyZjUyODM5NTEiLCJleHAiOjE3Nzc4OTEwNzIsImlhdCI6MTc3Nzg4OTI3MiwidHlwZSI6ImFjY2VzcyJ9.og7RFvE_IOafpoohjyaMzq3uUXvBL7PjHA4eEPMXk1I",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3M2QwNDVmNS0zYjQ5LTQ3MTYtOGI1Zi1jYTcyZjUyODM5NTEiLCJleHAiOjE3Nzg0OTQwNzIsImlhdCI6MTc3Nzg4OTI3MiwidHlwZSI6InJlZnJlc2gifQ.SD7keF3pMtmiO6n0qDQM2R16IKx8EnAiS2kscITbbx0",
+                "user": {
+                    "phone_number": "+380000000017",
+                    "id": 17,
+                    "pair_id": 9,
+                    "password": "boloto12"
+                },
+                "user_id": "73d045f5-3b49-4716-8b5f-ca72f5283951"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4MTBlYTFhYi0zZDU0LTQ0ZWUtYTdiMy0wY2ZmYmZiMWRiYjYiLCJleHAiOjE3Nzc4OTEwNzMsImlhdCI6MTc3Nzg4OTI3MywidHlwZSI6ImFjY2VzcyJ9.kU3LjYwIqZOXY5uRm1ofIYlk0mw2lDGV7j6Lmt0n_rQ",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4MTBlYTFhYi0zZDU0LTQ0ZWUtYTdiMy0wY2ZmYmZiMWRiYjYiLCJleHAiOjE3Nzg0OTQwNzMsImlhdCI6MTc3Nzg4OTI3MywidHlwZSI6InJlZnJlc2gifQ.BaB4UAjmPOBGEaEAka6d4ITX1hnhTSTLxtKiH7Nk9ws",
+                "user": {
+                    "phone_number": "+380000000018",
+                    "id": 18,
+                    "pair_id": 9,
+                    "password": "boloto12"
+                },
+                "user_id": "810ea1ab-3d54-44ee-a7b3-0cffbfb1dbb6"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3ZTM1NGUyNC0wZWIwLTRjZTctYmRjNy01NTUwYzNhZmQ0NWEiLCJleHAiOjE3Nzc4OTEwNzMsImlhdCI6MTc3Nzg4OTI3MywidHlwZSI6ImFjY2VzcyJ9.IXhWfxdjnLFVpJNXt_s7tQ7VtwQSAp6-kN1sNtmL6WQ",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3ZTM1NGUyNC0wZWIwLTRjZTctYmRjNy01NTUwYzNhZmQ0NWEiLCJleHAiOjE3Nzg0OTQwNzMsImlhdCI6MTc3Nzg4OTI3MywidHlwZSI6InJlZnJlc2gifQ._o6qAAKu0F-CK96EviK14VHB0KQzEL8SeZHBHQw6S9M",
+                "user": {
+                    "id": 19,
+                    "pair_id": 10,
+                    "password": "boloto12",
+                    "phone_number": "+380000000019"
+                },
+                "user_id": "7e354e24-0eb0-4ce7-bdc7-5550c3afd45a"
+            },
+            {
+                "user": {
+                    "id": 20,
+                    "pair_id": 10,
+                    "password": "boloto12",
+                    "phone_number": "+380000000020"
+                },
+                "user_id": "8f47f6df-3b74-46a0-88cc-3f655fd6a183",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4ZjQ3ZjZkZi0zYjc0LTQ2YTAtODhjYy0zZjY1NWZkNmExODMiLCJleHAiOjE3Nzc4OTEwNzQsImlhdCI6MTc3Nzg4OTI3NCwidHlwZSI6ImFjY2VzcyJ9.AhZpEXCfawLGiCp2j-tURaYwbFij0fEN2Ql6Y9S1x1E",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4ZjQ3ZjZkZi0zYjc0LTQ2YTAtODhjYy0zZjY1NWZkNmExODMiLCJleHAiOjE3Nzg0OTQwNzQsImlhdCI6MTc3Nzg4OTI3NCwidHlwZSI6InJlZnJlc2gifQ.0KVjzIh0HxMKabfWsASm9YuG8KR0-bolhfVrapRbz2s"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0N2Y3YjYxNS0yZDBjLTRjNjItOGRjOC1lMjA2Njk5Y2RhZWYiLCJleHAiOjE3Nzc4OTEwNzQsImlhdCI6MTc3Nzg4OTI3NCwidHlwZSI6ImFjY2VzcyJ9.d-1K4TDOBApVCjQXviXT0bfqjCKg-PUQ4fZl7ExsOEo",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0N2Y3YjYxNS0yZDBjLTRjNjItOGRjOC1lMjA2Njk5Y2RhZWYiLCJleHAiOjE3Nzg0OTQwNzQsImlhdCI6MTc3Nzg4OTI3NCwidHlwZSI6InJlZnJlc2gifQ.usGBXCVYx3-neYJPE9QZS-g90fDSDqSyL6faG1sD5zA",
+                "user": {
+                    "pair_id": 11,
+                    "password": "boloto12",
+                    "phone_number": "+380000000021",
+                    "id": 21
+                },
+                "user_id": "47f7b615-2d0c-4c62-8dc8-e206699cdaef"
+            },
+            {
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxOGQzMzM2My1iY2EyLTQzMzUtOTE1Yi1kYWJiZTY0NDNiODAiLCJleHAiOjE3Nzg0OTQwNzUsImlhdCI6MTc3Nzg4OTI3NSwidHlwZSI6InJlZnJlc2gifQ.bkEFSSCQGSK0wu8wN5VYeCqPNZUmqd-3A0H3-Oe0FKo",
+                "user": {
+                    "id": 22,
+                    "pair_id": 11,
+                    "password": "boloto12",
+                    "phone_number": "+380000000022"
+                },
+                "user_id": "18d33363-bca2-4335-915b-dabbe6443b80",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxOGQzMzM2My1iY2EyLTQzMzUtOTE1Yi1kYWJiZTY0NDNiODAiLCJleHAiOjE3Nzc4OTEwNzUsImlhdCI6MTc3Nzg4OTI3NSwidHlwZSI6ImFjY2VzcyJ9.NSwZoVNbGsKRajKd_rMI6aS5YCmgUkZUrA8MaWL7AN4"
+            },
+            {
+                "user_id": "c776980e-5752-4ced-8cf9-04cee84f4638",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNzc2OTgwZS01NzUyLTRjZWQtOGNmOS0wNGNlZTg0ZjQ2MzgiLCJleHAiOjE3Nzc4OTEwNzUsImlhdCI6MTc3Nzg4OTI3NSwidHlwZSI6ImFjY2VzcyJ9.g5QiZXRvxAjGgeVhhwuEnDaiLi62flg1dKwPeUQxzug",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNzc2OTgwZS01NzUyLTRjZWQtOGNmOS0wNGNlZTg0ZjQ2MzgiLCJleHAiOjE3Nzg0OTQwNzUsImlhdCI6MTc3Nzg4OTI3NSwidHlwZSI6InJlZnJlc2gifQ.mSyyaH5M7PrcEaId2eZvkogo1V0khYS262KI-5suaYE",
+                "user": {
+                    "password": "boloto12",
+                    "phone_number": "+380000000023",
+                    "id": 23,
+                    "pair_id": 12
+                }
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMTA0YjA5Ni05Nzk3LTRjZDQtYTY5Zi0zNDlmMmMxMzBkMjkiLCJleHAiOjE3Nzc4OTEwNzYsImlhdCI6MTc3Nzg4OTI3NiwidHlwZSI6ImFjY2VzcyJ9.ttPljp_X0pMvPr9VVz_pBp5o2m0occwRDof0tyhbNJM",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMTA0YjA5Ni05Nzk3LTRjZDQtYTY5Zi0zNDlmMmMxMzBkMjkiLCJleHAiOjE3Nzg0OTQwNzYsImlhdCI6MTc3Nzg4OTI3NiwidHlwZSI6InJlZnJlc2gifQ.hBXHm4mhjizgZeWzWwfoIRi59lNX-XOqiSKAHe-sB_I",
+                "user": {
+                    "id": 24,
+                    "pair_id": 12,
+                    "password": "boloto12",
+                    "phone_number": "+380000000024"
+                },
+                "user_id": "e104b096-9797-4cd4-a69f-349f2c130d29"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxZThmNWU4MC1lNGIxLTRkNjAtYTgyOC05NjhmNzBiZjk4NTEiLCJleHAiOjE3Nzc4OTEwNzcsImlhdCI6MTc3Nzg4OTI3NywidHlwZSI6ImFjY2VzcyJ9.pKpVLUA6xeXoUpqNFIJWiWoBOjciz94lCWti2tyQBgQ",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxZThmNWU4MC1lNGIxLTRkNjAtYTgyOC05NjhmNzBiZjk4NTEiLCJleHAiOjE3Nzg0OTQwNzcsImlhdCI6MTc3Nzg4OTI3NywidHlwZSI6InJlZnJlc2gifQ.CCYtoA_TmBnwqexpNtOIfBCVmOV3et0ivxrX4ADI-3U",
+                "user": {
+                    "id": 25,
+                    "pair_id": 13,
+                    "password": "boloto12",
+                    "phone_number": "+380000000025"
+                },
+                "user_id": "1e8f5e80-e4b1-4d60-a828-968f70bf9851"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiZGFhYjQ4Yy1mN2IwLTQ0YjktODJlNS0yMWMyNzczN2VlYzAiLCJleHAiOjE3Nzc4OTEwNzcsImlhdCI6MTc3Nzg4OTI3NywidHlwZSI6ImFjY2VzcyJ9.aAzsYzVJ2cUBYbpQX1N2dMIlbn8rFvVTPN9v4UnEG68",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiZGFhYjQ4Yy1mN2IwLTQ0YjktODJlNS0yMWMyNzczN2VlYzAiLCJleHAiOjE3Nzg0OTQwNzcsImlhdCI6MTc3Nzg4OTI3NywidHlwZSI6InJlZnJlc2gifQ.zs3ZPvhfNP5U5ShDnoO6c0H5GXc37cUWW0dPh0-_CJM",
+                "user": {
+                    "id": 26,
+                    "pair_id": 13,
+                    "password": "boloto12",
+                    "phone_number": "+380000000026"
+                },
+                "user_id": "bdaab48c-f7b0-44b9-82e5-21c27737eec0"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMzMwMWZiZS0wNmRlLTRmMGEtODNjMy1kMjVlOTNhODEyMzgiLCJleHAiOjE3Nzc4OTEwNzgsImlhdCI6MTc3Nzg4OTI3OCwidHlwZSI6ImFjY2VzcyJ9.rPi-Xl3e5DRjcwFQ9x-vXMnes9us4Ch0Q4DXI_69y_w",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMzMwMWZiZS0wNmRlLTRmMGEtODNjMy1kMjVlOTNhODEyMzgiLCJleHAiOjE3Nzg0OTQwNzgsImlhdCI6MTc3Nzg4OTI3OCwidHlwZSI6InJlZnJlc2gifQ.iGpUopwt6GeXpdItO78IGeeJqI7Qc_2Ryoo5h7JAo8s",
+                "user": {
+                    "phone_number": "+380000000027",
+                    "id": 27,
+                    "pair_id": 14,
+                    "password": "boloto12"
+                },
+                "user_id": "f3301fbe-06de-4f0a-83c3-d25e93a81238"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZjcxOGZiYS0wYzJlLTQ2MTAtOGE3Mi04MDJhZTc2MzhjYjIiLCJleHAiOjE3Nzc4OTEwNzgsImlhdCI6MTc3Nzg4OTI3OCwidHlwZSI6ImFjY2VzcyJ9.r9nYa4jaH2demj5wvqDlDIJcV3QcPSOE59RgTQk_i0c",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZjcxOGZiYS0wYzJlLTQ2MTAtOGE3Mi04MDJhZTc2MzhjYjIiLCJleHAiOjE3Nzg0OTQwNzgsImlhdCI6MTc3Nzg4OTI3OCwidHlwZSI6InJlZnJlc2gifQ.kzOkabaROH43CKYQKwMh_oBHU8zmSbCQbO5ma0jkXt8",
+                "user": {
+                    "id": 28,
+                    "pair_id": 14,
+                    "password": "boloto12",
+                    "phone_number": "+380000000028"
+                },
+                "user_id": "af718fba-0c2e-4610-8a72-802ae7638cb2"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMDRiYjE2Ny1jOWY3LTQ3M2MtYjk3Yy05N2YyZTk4ZmUxOGQiLCJleHAiOjE3Nzc4OTEwNzksImlhdCI6MTc3Nzg4OTI3OSwidHlwZSI6ImFjY2VzcyJ9.MYTSeOd4Ryd1UHPNhOT318AXk2upsDzE4lWAAMwBRnk",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMDRiYjE2Ny1jOWY3LTQ3M2MtYjk3Yy05N2YyZTk4ZmUxOGQiLCJleHAiOjE3Nzg0OTQwNzksImlhdCI6MTc3Nzg4OTI3OSwidHlwZSI6InJlZnJlc2gifQ.F8wqBmlzO-tosM2iKH6glf3moflooeeqBsmZWpmFQGo",
+                "user": {
+                    "id": 29,
+                    "pair_id": 15,
+                    "password": "boloto12",
+                    "phone_number": "+380000000029"
+                },
+                "user_id": "b04bb167-c9f7-473c-b97c-97f2e98fe18d"
+            },
+            {
+                "user_id": "4d799d3f-474c-420f-a5d2-b68fcf5fa632",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZDc5OWQzZi00NzRjLTQyMGYtYTVkMi1iNjhmY2Y1ZmE2MzIiLCJleHAiOjE3Nzc4OTEwODAsImlhdCI6MTc3Nzg4OTI4MCwidHlwZSI6ImFjY2VzcyJ9.HyaRva_KKA-LLZaN1qDevqHX7kdMGQHLflutJVCycbI",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZDc5OWQzZi00NzRjLTQyMGYtYTVkMi1iNjhmY2Y1ZmE2MzIiLCJleHAiOjE3Nzg0OTQwODAsImlhdCI6MTc3Nzg4OTI4MCwidHlwZSI6InJlZnJlc2gifQ.n402vu-h4E6NFlg7TkV9UrvBuWSgNNviZ5Qt-vYPfUo",
+                "user": {
+                    "phone_number": "+380000000030",
+                    "id": 30,
+                    "pair_id": 15,
+                    "password": "boloto12"
+                }
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMzNhODgzMC1iZWMwLTQwMzAtODIzMi1mZDZmNDYxOGQzNGIiLCJleHAiOjE3Nzc4OTEwODAsImlhdCI6MTc3Nzg4OTI4MCwidHlwZSI6ImFjY2VzcyJ9.5VjkoeD4XNLDRRFhEqKsH8Z6_iOJKuwN6bEhaquksGQ",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMzNhODgzMC1iZWMwLTQwMzAtODIzMi1mZDZmNDYxOGQzNGIiLCJleHAiOjE3Nzg0OTQwODAsImlhdCI6MTc3Nzg4OTI4MCwidHlwZSI6InJlZnJlc2gifQ.RyWRR7j1NnnjN9rP8j1oEvc24hYrArrc4aRs3Ef7lO4",
+                "user": {
+                    "pair_id": 16,
+                    "password": "boloto12",
+                    "phone_number": "+380000000031",
+                    "id": 31
+                },
+                "user_id": "a33a8830-bec0-4030-8232-fd6f4618d34b"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWZmNDY0Ni0zNTVkLTRkNTYtOGMzZS1iYmY1YmQ4MDA0YmUiLCJleHAiOjE3Nzc4OTEwODEsImlhdCI6MTc3Nzg4OTI4MSwidHlwZSI6ImFjY2VzcyJ9.9IJaJzh5oVBh_URQJP1eBxllBddqsUIBZYoILHvzBd8",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWZmNDY0Ni0zNTVkLTRkNTYtOGMzZS1iYmY1YmQ4MDA0YmUiLCJleHAiOjE3Nzg0OTQwODEsImlhdCI6MTc3Nzg4OTI4MSwidHlwZSI6InJlZnJlc2gifQ.KcmwUVYHhpXq1SjPO-X4an43CQBsTbCQ-J8QBqYeJK0",
+                "user": {
+                    "id": 32,
+                    "pair_id": 16,
+                    "password": "boloto12",
+                    "phone_number": "+380000000032"
+                },
+                "user_id": "baff4646-355d-4d56-8c3e-bbf5bd8004be"
+            },
+            {
+                "user_id": "cf642f8c-68cd-431b-8411-552bcaf596f7",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjZjY0MmY4Yy02OGNkLTQzMWItODQxMS01NTJiY2FmNTk2ZjciLCJleHAiOjE3Nzc4OTEwODEsImlhdCI6MTc3Nzg4OTI4MSwidHlwZSI6ImFjY2VzcyJ9.yKpQAJ2i3XtXuku5lQSLegVhtNTGaipWwA6wD1edEdA",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjZjY0MmY4Yy02OGNkLTQzMWItODQxMS01NTJiY2FmNTk2ZjciLCJleHAiOjE3Nzg0OTQwODEsImlhdCI6MTc3Nzg4OTI4MSwidHlwZSI6InJlZnJlc2gifQ.T4g7zfHbFbhW2gxHXkJtR6dTRrpdAl5om5bd3NiTYnQ",
+                "user": {
+                    "password": "boloto12",
+                    "phone_number": "+380000000033",
+                    "id": 33,
+                    "pair_id": 17
+                }
+            },
+            {
+                "user_id": "08a2b65f-95a2-4a5f-87c9-23f554ef8202",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOGEyYjY1Zi05NWEyLTRhNWYtODdjOS0yM2Y1NTRlZjgyMDIiLCJleHAiOjE3Nzc4OTEwODIsImlhdCI6MTc3Nzg4OTI4MiwidHlwZSI6ImFjY2VzcyJ9.Ul-5TlZPVSppxjBKoMOnxd-JarPTc2efbGtC5o5Ab9U",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOGEyYjY1Zi05NWEyLTRhNWYtODdjOS0yM2Y1NTRlZjgyMDIiLCJleHAiOjE3Nzg0OTQwODIsImlhdCI6MTc3Nzg4OTI4MiwidHlwZSI6InJlZnJlc2gifQ.BhLjDhvyYBIS38PbNPXxLbG4bI2CG_KEr05x7YPDe8M",
+                "user": {
+                    "id": 34,
+                    "pair_id": 17,
+                    "password": "test1234",
+                    "phone_number": "+380987654321"
+                }
+            },
+            {
+                "user": {
+                    "id": 35,
+                    "pair_id": 18,
+                    "password": "test1234",
+                    "phone_number": "+380987654322"
+                },
+                "user_id": "cce0be6a-997a-4b84-8481-4d00e539dc79",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjY2UwYmU2YS05OTdhLTRiODQtODQ4MS00ZDAwZTUzOWRjNzkiLCJleHAiOjE3Nzc4OTEwODIsImlhdCI6MTc3Nzg4OTI4MiwidHlwZSI6ImFjY2VzcyJ9.xDaZuadbv9XwATeAQnoROWvfcYYJUiQ4m8xgdcUSGDE",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjY2UwYmU2YS05OTdhLTRiODQtODQ4MS00ZDAwZTUzOWRjNzkiLCJleHAiOjE3Nzg0OTQwODIsImlhdCI6MTc3Nzg4OTI4MiwidHlwZSI6InJlZnJlc2gifQ.ZklCn99LOAFtVPUyjB7PYXr3KhuHY625PH5pKqyKLcM"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxZjM0Mzg4Ni00YjVjLTRjZjQtYjViNy1hNDcxNmRjNjI5NTciLCJleHAiOjE3Nzc4OTEwODMsImlhdCI6MTc3Nzg4OTI4MywidHlwZSI6ImFjY2VzcyJ9.0cQymKlyh_crOAinp3axuDjCOre-IhW9QZjPgpb9trQ",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxZjM0Mzg4Ni00YjVjLTRjZjQtYjViNy1hNDcxNmRjNjI5NTciLCJleHAiOjE3Nzg0OTQwODMsImlhdCI6MTc3Nzg4OTI4MywidHlwZSI6InJlZnJlc2gifQ.F2-lHLs7aWmpUuxZNsvrmxCx0t5j0o0uXU2-kLTP28s",
+                "user": {
+                    "password": "test1234",
+                    "phone_number": "+380987654337",
+                    "id": 36,
+                    "pair_id": 18
+                },
+                "user_id": "1f343886-4b5c-4cf4-b5b7-a4716dc62957"
+            },
+            {
+                "user_id": "6a6b3380-4c8f-4d39-9994-d817c13bbbff",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2YTZiMzM4MC00YzhmLTRkMzktOTk5NC1kODE3YzEzYmJiZmYiLCJleHAiOjE3Nzc4OTEwODQsImlhdCI6MTc3Nzg4OTI4NCwidHlwZSI6ImFjY2VzcyJ9.eAPtzLUK-0XQXoRFAFmHIg6EXUqB-CQUPcbRbWx0y3Q",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2YTZiMzM4MC00YzhmLTRkMzktOTk5NC1kODE3YzEzYmJiZmYiLCJleHAiOjE3Nzg0OTQwODQsImlhdCI6MTc3Nzg4OTI4NCwidHlwZSI6InJlZnJlc2gifQ.fgERFuRLFyGYPsxXeOjOumfGqeR6saTszTZXsrfLBhk",
+                "user": {
+                    "id": 37,
+                    "pair_id": 19,
+                    "password": "test1234",
+                    "phone_number": "+380987654336"
+                }
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYzI2ZjM4MC01YWNlLTQ3ZTgtYWZjMi1mYjJlYWE5YWU3NzUiLCJleHAiOjE3Nzc4OTEwODQsImlhdCI6MTc3Nzg4OTI4NCwidHlwZSI6ImFjY2VzcyJ9.WERglPcDTgxdafsGk36w04Aj2balSAX6TQfbV4L6wG8",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYzI2ZjM4MC01YWNlLTQ3ZTgtYWZjMi1mYjJlYWE5YWU3NzUiLCJleHAiOjE3Nzg0OTQwODQsImlhdCI6MTc3Nzg4OTI4NCwidHlwZSI6InJlZnJlc2gifQ.aq1vx40IV6gTg8wb0KQ8nqpGk9kUFGNztiTEgNULV3Y",
+                "user": {
+                    "id": 38,
+                    "pair_id": 19,
+                    "password": "test1234",
+                    "phone_number": "+380987654335"
+                },
+                "user_id": "ac26f380-5ace-47e8-afc2-fb2eaa9ae775"
+            },
+            {
+                "user": {
+                    "phone_number": "+380987654334",
+                    "id": 39,
+                    "pair_id": 20,
+                    "password": "test1234"
+                },
+                "user_id": "a3dac953-7390-4386-9587-cc030c9261fa",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhM2RhYzk1My03MzkwLTQzODYtOTU4Ny1jYzAzMGM5MjYxZmEiLCJleHAiOjE3Nzc4OTEwODUsImlhdCI6MTc3Nzg4OTI4NSwidHlwZSI6ImFjY2VzcyJ9.rPmzikO4HX77aixkQiofvARhJ5vrTUZ_Nx_3nVa-Hlo",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhM2RhYzk1My03MzkwLTQzODYtOTU4Ny1jYzAzMGM5MjYxZmEiLCJleHAiOjE3Nzg0OTQwODUsImlhdCI6MTc3Nzg4OTI4NSwidHlwZSI6InJlZnJlc2gifQ.HumUrcLZfhd_Japfm1Z7Aix5lGvd5etS2-Rb-t6LubA"
+            },
+            {
+                "user_id": "855306a4-1680-449f-aaec-808ad22f0692",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTUzMDZhNC0xNjgwLTQ0OWYtYWFlYy04MDhhZDIyZjA2OTIiLCJleHAiOjE3Nzc4OTEwODUsImlhdCI6MTc3Nzg4OTI4NSwidHlwZSI6ImFjY2VzcyJ9.Hfu4zWsmKwFGKTmnS_wQY7zxauz_NGhtXDV8ETlaBT8",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTUzMDZhNC0xNjgwLTQ0OWYtYWFlYy04MDhhZDIyZjA2OTIiLCJleHAiOjE3Nzg0OTQwODUsImlhdCI6MTc3Nzg4OTI4NSwidHlwZSI6InJlZnJlc2gifQ.IMrLaPMYZVJiwvycYNeUzQA7QsyS-AVjmg_g0Qreh9g",
+                "user": {
+                    "pair_id": 20,
+                    "password": "test1234",
+                    "phone_number": "+380987654333",
+                    "id": 40
+                }
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzYzEwNDVkNS1iYWMyLTQ4MzItYjlhZi0zZDFmNDcyZTIwOTIiLCJleHAiOjE3Nzc4OTEwODYsImlhdCI6MTc3Nzg4OTI4NiwidHlwZSI6ImFjY2VzcyJ9.rTbM8ywYW4DEfwDn294Z0my1_M1Cq3FLqHvZzcOpY60",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzYzEwNDVkNS1iYWMyLTQ4MzItYjlhZi0zZDFmNDcyZTIwOTIiLCJleHAiOjE3Nzg0OTQwODYsImlhdCI6MTc3Nzg4OTI4NiwidHlwZSI6InJlZnJlc2gifQ.a4F_HLsAYTevhgTwLn5wE1VIQK-N_30bqFWN4Zsi4E8",
+                "user": {
+                    "id": 41,
+                    "pair_id": 21,
+                    "password": "test1234",
+                    "phone_number": "+380987654332"
+                },
+                "user_id": "3c1045d5-bac2-4832-b9af-3d1f472e2092"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYmY0NjQyYS01NTRiLTRhZmMtYjMxOC04ZWFkOWYyNjAzOGYiLCJleHAiOjE3Nzc4OTEwODYsImlhdCI6MTc3Nzg4OTI4NiwidHlwZSI6ImFjY2VzcyJ9.Gy5PUrnbJcYyhOmALgMjVyIZpGzmfFcjxeCV19Rr_Wk",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYmY0NjQyYS01NTRiLTRhZmMtYjMxOC04ZWFkOWYyNjAzOGYiLCJleHAiOjE3Nzg0OTQwODYsImlhdCI6MTc3Nzg4OTI4NiwidHlwZSI6InJlZnJlc2gifQ.jemCoQN-LmO9Q_fzPMytcxz1tLOsmSlBMJaH2YbD1Zc",
+                "user": {
+                    "id": 42,
+                    "pair_id": 21,
+                    "password": "test1234",
+                    "phone_number": "+380987654331"
+                },
+                "user_id": "bbf4642a-554b-4afc-b318-8ead9f26038f"
+            },
+            {
+                "user": {
+                    "password": "test1234",
+                    "phone_number": "+380987654330",
+                    "id": 43,
+                    "pair_id": 22
+                },
+                "user_id": "2bb111ff-c92a-4dc5-b9a0-347d8b933800",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyYmIxMTFmZi1jOTJhLTRkYzUtYjlhMC0zNDdkOGI5MzM4MDAiLCJleHAiOjE3Nzc4OTEwODcsImlhdCI6MTc3Nzg4OTI4NywidHlwZSI6ImFjY2VzcyJ9.pHG8Q9a7JFX7pbWeMAN25_B5y80gSD__Ut4ahcAtSbY",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyYmIxMTFmZi1jOTJhLTRkYzUtYjlhMC0zNDdkOGI5MzM4MDAiLCJleHAiOjE3Nzg0OTQwODcsImlhdCI6MTc3Nzg4OTI4NywidHlwZSI6InJlZnJlc2gifQ.YDGMmNwiJyAQYdoVcq0E48Fy92s6sV7cfEBU1-fGiow"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYzk5NGFkZC04NjM5LTQ1MmMtOTAxZS0zYTQ5YmU4ZGFlZTAiLCJleHAiOjE3Nzc4OTEwODcsImlhdCI6MTc3Nzg4OTI4NywidHlwZSI6ImFjY2VzcyJ9.nKPIpbKzYDjOArKb5x4kYYL4f2AOXXy1ZBASNH_4pHo",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYzk5NGFkZC04NjM5LTQ1MmMtOTAxZS0zYTQ5YmU4ZGFlZTAiLCJleHAiOjE3Nzg0OTQwODcsImlhdCI6MTc3Nzg4OTI4NywidHlwZSI6InJlZnJlc2gifQ.zOTQT5JkN4u1cDoIzWGOhj-fho_tO7lfp6OC5OAnct4",
+                "user": {
+                    "id": 44,
+                    "pair_id": 22,
+                    "password": "test1234",
+                    "phone_number": "+380987654329"
+                },
+                "user_id": "bc994add-8639-452c-901e-3a49be8daee0"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMmZlMGQxMi0yZTQ2LTQ4ZDQtOGRjNS0yN2MyOTA1YjM2ZDAiLCJleHAiOjE3Nzc4OTEwODgsImlhdCI6MTc3Nzg4OTI4OCwidHlwZSI6ImFjY2VzcyJ9.QqOytmV62RAgofRblVGODO3juLsjKjbilZe39AYceaA",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMmZlMGQxMi0yZTQ2LTQ4ZDQtOGRjNS0yN2MyOTA1YjM2ZDAiLCJleHAiOjE3Nzg0OTQwODgsImlhdCI6MTc3Nzg4OTI4OCwidHlwZSI6InJlZnJlc2gifQ.iYwt3ckfocpUzSmxbhwl-MuY9UqExbadP7QBDfnC9N4",
+                "user": {
+                    "id": 45,
+                    "pair_id": 23,
+                    "password": "test1234",
+                    "phone_number": "+380987654328"
+                },
+                "user_id": "e2fe0d12-2e46-48d4-8dc5-27c2905b36d0"
+            },
+            {
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlODk5MmUxYy0zYjA2LTQxNDMtOTZhNS03Y2MxNGZmMDgzMWEiLCJleHAiOjE3Nzg0OTQwODksImlhdCI6MTc3Nzg4OTI4OSwidHlwZSI6InJlZnJlc2gifQ.Eiw5_FxGlVTcQ934gHG1ZF6nMw7xuBD7ip5zHyR_5mU",
+                "user": {
+                    "id": 46,
+                    "pair_id": 23,
+                    "password": "test1234",
+                    "phone_number": "+380987654327"
+                },
+                "user_id": "e8992e1c-3b06-4143-96a5-7cc14ff0831a",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlODk5MmUxYy0zYjA2LTQxNDMtOTZhNS03Y2MxNGZmMDgzMWEiLCJleHAiOjE3Nzc4OTEwODksImlhdCI6MTc3Nzg4OTI4OSwidHlwZSI6ImFjY2VzcyJ9.0tDRy-3SojdTUFMjfubthRd_llwBx8Hyp5OxkSewAnc"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNzdkZGQ0ZC1iNGI3LTQ1ZWUtOTY2Yi00ZTczMTQ2Nzc2ZDMiLCJleHAiOjE3Nzc4OTEwODksImlhdCI6MTc3Nzg4OTI4OSwidHlwZSI6ImFjY2VzcyJ9.-Gn86R8WISjJlbh8AEZhtZ2X5JqbJF7-1DS60p13pJY",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNzdkZGQ0ZC1iNGI3LTQ1ZWUtOTY2Yi00ZTczMTQ2Nzc2ZDMiLCJleHAiOjE3Nzg0OTQwODksImlhdCI6MTc3Nzg4OTI4OSwidHlwZSI6InJlZnJlc2gifQ.DXZr-yaF-AoGuTY-CjeVE2ZZQUqmpUD-bUhrIv7QPZM",
+                "user": {
+                    "phone_number": "+380987654326",
+                    "id": 47,
+                    "pair_id": 24,
+                    "password": "test1234"
+                },
+                "user_id": "c77ddd4d-b4b7-45ee-966b-4e73146776d3"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZDQ4ZjUzZC05YzRkLTQ4NmItOGE3MC1lNWQzMWJmMjJlNjciLCJleHAiOjE3Nzc4OTEwOTAsImlhdCI6MTc3Nzg4OTI5MCwidHlwZSI6ImFjY2VzcyJ9.xnVxzCZa8Ij-oqbSCo5iXHpY8Up8jBmxTY23ykYwXzg",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZDQ4ZjUzZC05YzRkLTQ4NmItOGE3MC1lNWQzMWJmMjJlNjciLCJleHAiOjE3Nzg0OTQwOTAsImlhdCI6MTc3Nzg4OTI5MCwidHlwZSI6InJlZnJlc2gifQ.PcLWZ9YPdEJ-c0LFktwAFt47obFvTYhSyDZ3ADP9h3Q",
+                "user": {
+                    "id": 48,
+                    "pair_id": 24,
+                    "password": "test1234",
+                    "phone_number": "+380987654325"
+                },
+                "user_id": "dd48f53d-9c4d-486b-8a70-e5d31bf22e67"
+            },
+            {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMDMyYjAwYi1lMTU5LTQ4NWYtYTMzZC0zZTI4ZWI5N2IxYWIiLCJleHAiOjE3Nzc4OTEwOTAsImlhdCI6MTc3Nzg4OTI5MCwidHlwZSI6ImFjY2VzcyJ9.ORHRiINuysnUe_rB4xOS_PMf1JmqnFMmfDql03SxICE",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMDMyYjAwYi1lMTU5LTQ4NWYtYTMzZC0zZTI4ZWI5N2IxYWIiLCJleHAiOjE3Nzg0OTQwOTAsImlhdCI6MTc3Nzg4OTI5MCwidHlwZSI6InJlZnJlc2gifQ.tXyHbwtyhP5O4lMm3Uq3QDNWD6EkP9SkLEARI0quMxU",
+                "user": {
+                    "id": 49,
+                    "pair_id": 25,
+                    "password": "test1234",
+                    "phone_number": "+380987654324"
+                },
+                "user_id": "2032b00b-e159-485f-a33d-3e28eb97b1ab"
+            },
+            {
+                "user": {
+                    "id": 50,
+                    "pair_id": 25,
+                    "password": "test1234",
+                    "phone_number": "+380987654323"
+                },
+                "user_id": "9f1d7b7f-ac45-49f8-b78b-cc24c1e9ca01",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZjFkN2I3Zi1hYzQ1LTQ5ZjgtYjc4Yi1jYzI0YzFlOWNhMDEiLCJleHAiOjE3Nzc4OTEwOTEsImlhdCI6MTc3Nzg4OTI5MSwidHlwZSI6ImFjY2VzcyJ9.3uB6w7MMboPiw6dhh0yX8cxfps81bTNa1bfXUajwjUQ",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZjFkN2I3Zi1hYzQ1LTQ5ZjgtYjc4Yi1jYzI0YzFlOWNhMDEiLCJleHAiOjE3Nzg0OTQwOTEsImlhdCI6MTc3Nzg4OTI5MSwidHlwZSI6InJlZnJlc2gifQ.BBVuEgzfzb7vhoeV2kRxqCRHjI1RjYytzgYQi9B7Ghs"
+            }
+        ],
+        "runMarker": "LOAD_TEST_1777889262795_t2pxxw"
+    },
+    "root_group": {
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {},
+        "checks": {
+                "WebSocket handshake OK (101)": {
+                    "fails": 0,
+                    "name": "WebSocket handshake OK (101)",
+                    "path": "::WebSocket handshake OK (101)",
+                    "id": "02ea3c2d44280e0669b94a1bc4904ccd",
+                    "passes": 50
+                }
+            },
+        "name": "",
+        "path": ""
+    }
+}

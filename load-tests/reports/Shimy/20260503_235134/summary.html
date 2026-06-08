@@ -1,0 +1,322 @@
+
+<html>
+<head>
+  <title>k6 Load Test Report</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Inter", Roboto, Arial, sans-serif;
+      padding: 2rem; background-color: #fafafa; color: #222; line-height: 1.45; }
+    h1, h2, h3 { margin-bottom: 0.5rem; font-weight: 600; color: #111; }
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.2rem; display: flex; align-items: center; gap: .5rem; }
+    h2 svg { width: 1rem; height: 1rem; }
+    p.note { color: #555; font-size: 0.9rem; margin-top: 0; margin-bottom: 1.5rem; }
+    section { margin-bottom: 2rem; background: #fff; padding: 1.5rem 2rem;
+      border-radius: 12px; box-shadow: 0 10px 24px -8px rgba(0,0,0,0.12); }
+    table { border-collapse: collapse; width: 100%; margin-top: 2rem; font-size: 0.9rem; }
+    th, td { border: 1px solid #ddd; padding: 0.75rem; text-align: left; vertical-align: top; }
+    th { background-color: #f4f4f4; font-weight: 600; }
+    tr:nth-child(even) { background: #fafafa; }
+    .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem; align-items: flex-start; }
+    .chart-card { background: #fff; border-radius: 12px; padding: 1rem 1rem 2rem;
+      box-shadow: 0 10px 24px -8px rgba(0,0,0,0.12); }
+    canvas { max-width: 100%; height: 260px; }
+    .kpi-row { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 1rem; }
+    .kpi-box { background: #fff; border-radius: 12px; box-shadow: 0 10px 24px -8px rgba(0,0,0,0.12);
+      padding: 1rem 1.25rem; min-width: 220px; flex: 0 0 auto; }
+    .kpi-label { font-size: 0.7rem; color: #666; text-transform: uppercase;
+      margin-bottom: 0.4rem; letter-spacing: .03em; font-weight: 500; }
+    .kpi-value { font-size: 1.1rem; font-weight: 600; color: #111; }
+    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+    .meta-box { background: #fff; border-radius: 12px; box-shadow: 0 10px 24px -8px rgba(0,0,0,0.12);
+      padding: 1rem 1.25rem; font-size: .9rem; line-height: 1.4; }
+    .meta-label { font-size: .7rem; letter-spacing: .03em; text-transform: uppercase;
+      color: #666; font-weight: 500; margin-bottom: .25rem; }
+    .meta-value { font-weight: 600; color: #111; word-break: break-all; }
+    .verdict-pill { display: inline-block; padding: .35rem .8rem; border-radius: 999px;
+      font-weight: 600; font-size: .85rem; }
+    .verdict-pass { background: #d4f5dc; color: #14532d; }
+    .verdict-fail { background: #ffe1e0; color: #7f1d1d; }
+  </style>
+</head>
+<body>
+  <h1>k6 Load Test Report</h1>
+  <p class="note">
+    Auto-generated from k6 <code>summary.json</code>. Use these metrics for capacity / stress analysis,
+    SLA validation and regression tracking.
+  </p>
+
+  <section>
+    <h2>Test metadata</h2>
+    <div class="meta-grid">
+      <div class="meta-box"><div class="meta-label">Test file executed</div>
+        <div class="meta-value">shimy/shimyFeedLoad.js</div></div>
+      <div class="meta-box"><div class="meta-label">Run timestamp</div>
+        <div class="meta-value">20260503_235134</div></div>
+      <div class="meta-box"><div class="meta-label">Max VUs observed</div>
+        <div class="meta-value">10</div></div>
+      <div class="meta-box"><div class="meta-label">Threshold verdict</div>
+        <div class="meta-value">
+          <span class="verdict-pill verdict-pass">
+            ✅ PASS (2/2)
+          </span>
+        </div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>High-level KPIs</h2>
+    
+    <div class="kpi-row">
+      <div class="kpi-box">
+        <div class="kpi-label">Avg requests/sec (RPS)</div>
+        <div class="kpi-value">5.22</div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-label">Total HTTP requests</div>
+        <div class="kpi-value">504</div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-label">Latency p50 / p95 / p99 (ms)</div>
+        <div class="kpi-value">
+          284.76 / 508.74 / n/a
+        </div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-label">Passed / Failed requests</div>
+        <div class="kpi-value">454 / 0</div>
+      </div>
+      
+      <div class="kpi-box">
+        <div class="kpi-label">Errors: 4xx / 5xx / network</div>
+        <div class="kpi-value">0 / 0 / 0</div>
+      </div>
+    </div>
+    <p class="note">
+      Pass/Fail source: <strong>custom-http</strong>.
+    </p>
+  
+  </section>
+
+  <section>
+    <h2>Core performance visuals</h2>
+    
+    <div class="charts-grid">
+      <div class="chart-card"><h3>Latency distribution (ms)</h3>
+        <p class="note">Response time percentiles. Rising p95/p99 means degraded UX.</p>
+        <canvas id="latencyChart"></canvas></div>
+      <div class="chart-card"><h3>Requests per second (RPS)</h3>
+        <p class="note">A flat line at high VUs may indicate saturation.</p>
+        <canvas id="rpsChart"></canvas></div>
+      <div class="chart-card"><h3>Pass vs Fail</h3>
+        <p class="note">Green = success. Red = 4xx/5xx/timeouts.</p>
+        <canvas id="passFailChart"></canvas></div>
+      <div class="chart-card"><h3>Low-level timings breakdown</h3>
+        <p class="note">HTTP request duration distribution.</p>
+        <canvas id="durationChart"></canvas></div>
+      <div class="chart-card"><h3>Connection / Send / Wait(TTFB) / Receive</h3>
+        <p class="note">Separates backend slowness (Wait/TTFB) from network overhead.</p>
+        <canvas id="networkChart"></canvas></div>
+      <div class="chart-card"><h3>Error type breakdown</h3>
+        <p class="note">Distinguish app-layer errors (4xx/5xx) from transport problems.</p>
+        <canvas id="errorBreakdownChart"></canvas></div>
+    </div>
+  
+  </section>
+
+  
+
+  <section>
+    <h2>Threshold breakdown</h2>
+    <table>
+      <thead><tr><th>Metric</th><th>Threshold</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr>
+                    <td>http_req_failed</td>
+                    <td><code>rate<0.05</code></td>
+                    <td>✅ pass</td>
+                  </tr><tr>
+                    <td>http_req_duration</td>
+                    <td><code>p(95)<1000</code></td>
+                    <td>✅ pass</td>
+                  </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Raw metrics table</h2>
+    <table>
+      <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+      <tbody>
+        
+              <tr>
+                <td>Blocked Time (ms)</td>
+                <td>max: 309.53 ms<br>p(90): 0.02 ms<br>p(95): 0.03 ms<br>avg: 5.90 ms<br>min: 0.00 ms<br>med: 0.01 ms</td>
+              </tr>
+              <tr>
+                <td>checks</td>
+                <td>1.00 </td>
+              </tr>
+              <tr>
+                <td>Connection Time (ms)</td>
+                <td>med: 0.00 ms<br>max: 131.63 ms<br>p(90): 0.00 ms<br>p(95): 0.00 ms<br>avg: 2.80 ms<br>min: 0.00 ms</td>
+              </tr>
+              <tr>
+                <td>Data Received (bytes)</td>
+                <td>count: 4752424.00 bytes<br>rate: 49257.05 bytes</td>
+              </tr>
+              <tr>
+                <td>Data Sent (bytes)</td>
+                <td>count: 209924.00 bytes<br>rate: 2175.78 bytes</td>
+              </tr>
+              <tr>
+                <td>Expected Response Duration (ms)</td>
+                <td>avg: 308.87 ms<br>min: 135.99 ms<br>med: 284.76 ms<br>max: 721.40 ms<br>p(90): 502.15 ms<br>p(95): 508.74 ms</td>
+              </tr>
+              <tr>
+                <td>Failed Requests</td>
+                <td>0.00 </td>
+              </tr>
+              <tr>
+                <td>Iteration Duration (ms)</td>
+                <td>p(95): 1529.61 ms<br>avg: 1295.21 ms<br>min: 1137.84 ms<br>med: 1276.28 ms<br>max: 1723.85 ms<br>p(90): 1469.95 ms</td>
+              </tr>
+              <tr>
+                <td>Max Virtual Users</td>
+                <td>10.00 </td>
+              </tr>
+              <tr>
+                <td>Request Send Time (ms)</td>
+                <td>avg: 0.05 ms<br>min: 0.01 ms<br>med: 0.05 ms<br>max: 0.66 ms<br>p(90): 0.07 ms<br>p(95): 0.08 ms</td>
+              </tr>
+              <tr>
+                <td>Response Receive Time (ms)</td>
+                <td>p(95): 0.31 ms<br>avg: 0.18 ms<br>min: 0.03 ms<br>med: 0.16 ms<br>max: 2.15 ms<br>p(90): 0.25 ms</td>
+              </tr>
+              <tr>
+                <td>Shimy feed latency (ms, Trend)</td>
+                <td>med: 269.98 ms, Trend<br>max: 721.40 ms, Trend<br>p(90): 449.62 ms, Trend<br>p(95): 499.17 ms, Trend<br>avg: 287.45 ms, Trend<br>min: 135.99 ms, Trend</td>
+              </tr>
+              <tr>
+                <td>Successful HTTP requests (custom)</td>
+                <td>count: 454.00 custom<br>rate: 4.71 custom</td>
+              </tr>
+              <tr>
+                <td>TLS Handshaking Time (ms)</td>
+                <td>avg: 3.00 ms<br>min: 0.00 ms<br>med: 0.00 ms<br>max: 141.62 ms<br>p(90): 0.00 ms<br>p(95): 0.00 ms</td>
+              </tr>
+              <tr>
+                <td>Total HTTP Requests</td>
+                <td>count: 504.00 <br>rate: 5.22 </td>
+              </tr>
+              <tr>
+                <td>Total Iterations</td>
+                <td>count: 454.00 <br>rate: 4.71 </td>
+              </tr>
+              <tr>
+                <td>Total Request Duration (ms)</td>
+                <td>min: 135.99 ms<br>med: 284.76 ms<br>max: 721.40 ms<br>p(90): 502.15 ms<br>p(95): 508.74 ms<br>avg: 308.87 ms<br>thresholds: NaN ms</td>
+              </tr>
+              <tr>
+                <td>Virtual Users (VUs)</td>
+                <td>1.00 VUs</td>
+              </tr>
+              <tr>
+                <td>Waiting Time (TTFB) (ms)</td>
+                <td>med: 284.62 TTFB<br>max: 721.14 TTFB<br>p(90): 501.89 TTFB<br>p(95): 508.39 TTFB<br>avg: 308.64 TTFB<br>min: 135.40 TTFB</td>
+              </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <script>
+    new Chart(document.getElementById('passFailChart'), {
+      type: 'pie',
+      data: {
+        labels: ['Passed', 'Failed'],
+        datasets: [{
+          data: [454, 0],
+          backgroundColor: ['#34a853', '#ea4335']
+        }]
+      },
+      options: { plugins: { legend: { position: 'top' } } }
+    });
+
+    
+      new Chart(document.getElementById('latencyChart'), {
+        type: 'bar',
+        data: {
+          labels: ['p50', 'p95', 'p99'],
+          datasets: [{
+            data: [
+              284.76,
+              508.74,
+              null
+            ],
+            backgroundColor: '#007acc'
+          }]
+        },
+        options: { plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { callback: v => v + ' ms' } } } }
+      });
+
+      new Chart(document.getElementById('rpsChart'), {
+        type: 'bar',
+        data: { labels: ['Avg RPS'], datasets: [{
+          data: [5.22],
+          backgroundColor: '#4b9c5a'
+        }] },
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+      });
+
+      const durationData = {"min":135.985,"med":284.759,"max":721.396,"p(90)":502.1538,"p(95)":508.73785,"avg":308.87054563492063,"thresholds":{"p(95)<1000":false}};
+      new Chart(document.getElementById('durationChart'), {
+        type: 'bar',
+        data: {
+          labels: ["Avg","Min","Max","p(90)","p(95)"],
+          datasets: [{
+            label: 'Total Request Duration (ms)',
+            data: [durationData.avg, durationData.min, durationData.max,
+                   durationData['p(90)'], durationData['p(95)']],
+            backgroundColor: '#007acc'
+          }]
+        },
+        options: { plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { callback: v => v + ' ms' } } } }
+      });
+
+      new Chart(document.getElementById('networkChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Connect', 'Send', 'Wait (TTFB)', 'Receive'],
+          datasets: [{
+            label: 'Avg timing (ms)',
+            data: [2.802047619047619, 0.05097420634920632,
+                   308.6437341269839, 0.17583730158730143],
+            backgroundColor: '#8e5af7'
+          }]
+        },
+        options: { plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { callback: v => v + ' ms' } } } }
+      });
+
+      
+      new Chart(document.getElementById('errorBreakdownChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['4xx', '5xx', 'Network'],
+          datasets: [{ data: [0, 0, 0],
+            backgroundColor: ['#f59e0b', '#ea4335', '#6b7280'] }]
+        },
+        options: { plugins: { legend: { position: 'top' } } }
+      });
+    
+
+    
+
+    
+  </script>
+</body>
+</html>

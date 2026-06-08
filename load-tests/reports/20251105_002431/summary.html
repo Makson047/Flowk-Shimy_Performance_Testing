@@ -1,0 +1,468 @@
+
+<html>
+<head>
+  <title>k6 Load Test Report</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", Roboto, Arial, sans-serif;
+      padding: 2rem;
+      background-color: #fafafa;
+      color: #222;
+      line-height: 1.45;
+    }
+    h1, h2, h3 {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #111;
+    }
+    h1 { font-size: 1.5rem; }
+    h2 {
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    h2 svg { width: 1rem; height: 1rem; }
+    p.note {
+      color: #555;
+      font-size: 0.9rem;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    section {
+      margin-bottom: 2rem;
+      background: #fff;
+      padding: 1.5rem 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 24px -8px rgba(0,0,0,0.12);
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 0.75rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background-color: #f4f4f4;
+      font-weight: 600;
+    }
+    tr:nth-child(even) { background: #fafafa; }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      align-items: flex-start;
+    }
+
+    .chart-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1rem 1rem 2rem;
+      box-shadow: 0 10px 24px -8px rgba(0,0,0,0.12);
+    }
+
+    canvas {
+      max-width: 100%;
+      height: 260px;
+    }
+
+    .kpi-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .kpi-box {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 10px 24px -8px rgba(0,0,0,0.12);
+      padding: 1rem 1.25rem;
+      min-width: 220px;
+      flex: 0 0 auto;
+    }
+
+    .kpi-label {
+      font-size: 0.7rem;
+      color: #666;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+      letter-spacing: .03em;
+      font-weight: 500;
+    }
+
+    .kpi-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #111;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .meta-box {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 10px 24px -8px rgba(0,0,0,0.12);
+      padding: 1rem 1.25rem;
+      font-size: .9rem;
+      line-height: 1.4;
+    }
+    .meta-label {
+      font-size: .7rem;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      color: #666;
+      font-weight: 500;
+      margin-bottom: .25rem;
+    }
+    .meta-value {
+      font-weight: 600;
+      color: #111;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <h1>k6 Load Test Report</h1>
+  <p class="note">
+    Auto-generated from k6 <code>summary.json</code>. Use these metrics for capacity / stress analysis,
+    SLA validation and regression tracking.
+  </p>
+
+  <section>
+    <h2>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#d00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 L2 7 L12 12 L22 7 Z" /><path d="M2 17 L12 22 L22 17" /><path d="M2 12 L12 17 L22 12" /></svg>
+      Test metadata
+    </h2>
+
+    <div class="meta-grid">
+      <div class="meta-box">
+        <div class="meta-label">Test file executed</div>
+        <div class="meta-value">feedLoad.js</div>
+      </div>
+
+      <div class="meta-box">
+        <div class="meta-label">Run timestamp</div>
+        <div class="meta-value">20251105_002431</div>
+      </div>
+
+      <div class="meta-box">
+        <div class="meta-label">Max virtual users observed (vus_max)</div>
+        <div class="meta-value">8000</div>
+      </div>
+
+      <div class="meta-box">
+        <div class="meta-label">HTTP total requests</div>
+        <div class="meta-value">n/a</div>
+      </div>
+
+      <div class="meta-box">
+        <div class="meta-label">Avg RPS (HTTP)</div>
+        <div class="meta-value">n/a</div>
+      </div>
+
+      <div class="meta-box">
+        <div class="meta-label">WS sessions OK</div>
+        <div class="meta-value">14902</div>
+      </div>
+
+      <div class="meta-box">
+        <div class="meta-label">WS handshake failures</div>
+        <div class="meta-value">19086</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+      High-level KPIs
+    </h2>
+
+    
+    <div class="kpi-row">
+      <div class="kpi-box">
+        <div class="kpi-label">WS sessions OK</div>
+        <div class="kpi-value">14902</div>
+      </div>
+
+      <div class="kpi-box">
+        <div class="kpi-label">WS handshake failures</div>
+        <div class="kpi-value">19086</div>
+      </div>
+
+      <div class="kpi-box">
+        <div class="kpi-label">Avg / p95 / max session duration (ms)</div>
+        <div class="kpi-value">
+          48889.50 /
+          64802.95 /
+          65000.00
+        </div>
+      </div>
+
+      <div class="kpi-box">
+        <div class="kpi-label">Total WS messages received</div>
+        <div class="kpi-value">30517</div>
+      </div>
+
+      <div class="kpi-box">
+        <div class="kpi-label">Passed / Failed sessions</div>
+        <div class="kpi-value">14902 / 19086</div>
+      </div>
+    </div>
+
+    <p class="note">
+      WebSocket mode metrics.<br/>
+      - Sessions OK = successful WebSocket handshakes (status 101).<br/>
+      - Handshake failures = could not establish WS connection at all.<br/>
+      - Session duration = how long clients stayed connected.<br/>
+      - Messages received = total messages sent from server to clients.<br/>
+      (Runtime "minor" socket errors during a valid session are intentionally NOT counted as failures here.)
+    </p>
+  
+  </section>
+
+  <section>
+    <h2>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16"/><path d="M4 15h16"/><path d="M4 11h16"/><path d="M4 7h16"/></svg>
+      Core performance visuals
+    </h2>
+
+    
+    <div class="charts-grid">
+
+      <div class="chart-card">
+        <h3>Pass vs Fail (sessions)</h3>
+        <p class="note">
+          Green = sessions with successful handshake (101). Red = sessions that failed to handshake.
+        </p>
+        <canvas id="passFailChart"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3>Session duration (ms)</h3>
+        <p class="note">
+          Average / p95 / max session lifetime. A drop in avg or spike in p95 may mean the server is force-closing clients.
+        </p>
+        <canvas id="wsDurationChart"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3>WS messages received</h3>
+        <p class="note">
+          Total messages server pushed to clients across all sessions.
+        </p>
+        <canvas id="wsMsgChart"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3>Sessions OK vs Failed</h3>
+        <p class="note">
+          Overall stability of WebSocket handshake layer.
+        </p>
+        <canvas id="wsSessionChart"></canvas>
+      </div>
+
+    </div>
+  
+  </section>
+
+  <section>
+    <h2>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Raw metrics table
+    </h2>
+
+    <table>
+      <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+      <tbody>
+        
+              <tr>
+                <td>checks</td>
+                <td>0.44 </td>
+              </tr>
+            
+              <tr>
+                <td>Data Received (bytes)</td>
+                <td>count: 488386650.00 bytes<br>rate: 1191100.61 bytes</td>
+              </tr>
+            
+              <tr>
+                <td>Data Sent (bytes)</td>
+                <td>rate: 22705.35 bytes<br>count: 9309869.00 bytes</td>
+              </tr>
+            
+              <tr>
+                <td>Iteration Duration (ms)</td>
+                <td>avg: 48602.05 ms<br>min: 6243.36 ms<br>med: 61000.43 ms<br>max: 66000.96 ms<br>p(90): 64663.08 ms<br>p(95): 65481.29 ms</td>
+              </tr>
+            
+              <tr>
+                <td>Max Virtual Users</td>
+                <td>8000.00 </td>
+              </tr>
+            
+              <tr>
+                <td>Successful WebSocket handshakes (custom)</td>
+                <td>count: 14902.00 custom<br>rate: 36.34 custom</td>
+              </tr>
+            
+              <tr>
+                <td>Total Iterations</td>
+                <td>rate: 82.59 <br>count: 33863.00 </td>
+              </tr>
+            
+              <tr>
+                <td>Virtual Users (VUs)</td>
+                <td>1491.00 VUs</td>
+              </tr>
+            
+              <tr>
+                <td>WebSocket handshake failures (custom)</td>
+                <td>count: 19086.00 custom<br>rate: 46.55 custom<br>thresholds: NaN custom</td>
+              </tr>
+            
+              <tr>
+                <td>WebSocket messages received (custom)</td>
+                <td>count: 30517.00 custom<br>rate: 74.43 custom</td>
+              </tr>
+            
+              <tr>
+                <td>WebSocket session duration (ms, Trend)</td>
+                <td>p(95): 64802.95 ms, Trend<br>avg: 48889.50 ms, Trend<br>min: 5243.00 ms, Trend<br>med: 60487.00 ms, Trend<br>max: 65000.00 ms, Trend<br>p(90): 64545.00 ms, Trend<br>thresholds: NaN ms, Trend</td>
+              </tr>
+            
+              <tr>
+                <td>ws_connecting</td>
+                <td>p(95): 60000.75 <br>avg: 45530.67 <br>min: 241.93 <br>med: 56576.66 <br>max: 60018.31 <br>p(90): 60000.47 </td>
+              </tr>
+            
+              <tr>
+                <td>ws_msgs_received</td>
+                <td>count: 30517.00 <br>rate: 74.43 </td>
+              </tr>
+            
+              <tr>
+                <td>ws_msgs_sent</td>
+                <td>count: 15245.00 <br>rate: 37.18 </td>
+              </tr>
+            
+              <tr>
+                <td>ws_session_duration</td>
+                <td>min: 5242.88 <br>med: 60000.18 <br>max: 65000.35 <br>p(90): 63650.25 <br>p(95): 64479.76 <br>avg: 47634.42 </td>
+              </tr>
+            
+              <tr>
+                <td>ws_sessions</td>
+                <td>count: 34331.00 <br>rate: 83.73 </td>
+              </tr>
+            
+      </tbody>
+    </table>
+  </section>
+
+  <script>
+    // helper for optional chart generation
+    function safeNumber(x) {
+      return (x === null || x === undefined || x === 'n/a')
+        ? null
+        : Number(x);
+    }
+
+    // ---- Common chart: Pass vs Fail pie (works for both http/ws) ----
+    new Chart(document.getElementById('passFailChart'), {
+      type: 'pie',
+      data: {
+        labels: ['Passed', 'Failed'],
+        datasets: [{
+          data: [14902, 19086],
+          backgroundColor: ['#34a853', '#ea4335']
+        }]
+      },
+      options: {
+        plugins: { legend: { position: 'top' } }
+      }
+    });
+
+    
+
+    
+      // ---------------- WS charts ----------------
+
+      // Session duration chart (avg / p95 / max)
+      new Chart(document.getElementById('wsDurationChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Avg ms', 'p95 ms', 'Max ms'],
+          datasets: [{
+            data: [
+              48889.5044960408,
+              64802.95,
+              65000
+            ],
+            backgroundColor: '#007acc'
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { callback: (val) => val + ' ms' }
+            }
+          }
+        }
+      });
+
+      // Messages received chart
+      new Chart(document.getElementById('wsMsgChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Total messages received'],
+          datasets: [{
+            data: [30517],
+            backgroundColor: '#4b9c5a'
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+
+      // Sessions OK vs Failed bar
+      new Chart(document.getElementById('wsSessionChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Sessions OK', 'Handshake Failed'],
+          datasets: [{
+            data: [
+              14902,
+              19086
+            ],
+            backgroundColor: ['#34a853', '#ea4335']
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+
+    
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{
+  "name": "k6-load-testing-demo",
+  "version": "1.0.0",
+  "description": "Performance/load testing demo project using k6. Includes smoke, load, and stress scenarios + HTML reporting.",
+  "type": "module",
+  "scripts": {
+    "report": "./scripts/k6-run-report.sh",
+    "report:stone-fruit": "./scripts/k6-run-report.sh flowkStage.js",
+    "shimy:bootstrap-chats": "node tools/shimy-bootstrap-chats.mjs",
+    "shimy:bootstrap-chats:dry": "node tools/shimy-bootstrap-chats.mjs --dry-run",
+    "shimy:bootstrap-chats:force": "node tools/shimy-bootstrap-chats.mjs --force",
+    "shimy:bootstrap-posts": "node tools/shimy-bootstrap-posts.mjs",
+    "shimy:bootstrap-posts:dry": "node tools/shimy-bootstrap-posts.mjs --dry-run",
+    "shimy:bootstrap-posts:force": "node tools/shimy-bootstrap-posts.mjs --force",
+    "shimy:seed-demo": "node tools/shimy-seed-demo.mjs",
+    "shimy:seed-demo:dry": "node tools/shimy-seed-demo.mjs --dry-run",
+    "shimy:seed-demo:teardown": "node tools/shimy-seed-demo.mjs --teardown",
+    "shimy:bootstrap-posts:teardown": "node tools/shimy-bootstrap-posts.mjs --teardown",
+    "shimy:bootstrap-posts:teardown:dry": "node tools/shimy-bootstrap-posts.mjs --teardown --dry-run",
+    "shimy:feed": "./scripts/k6-run-report.sh shimy/shimyFeedLoad.js",
+    "shimy:feed:smoke": "PROFILE=smoke ./scripts/k6-run-report.sh shimy/shimyFeedLoad.js",
+    "shimy:feed:load": "PROFILE=load ./scripts/k6-run-report.sh shimy/shimyFeedLoad.js",
+    "shimy:feed:stress": "PROFILE=stress ./scripts/k6-run-report.sh shimy/shimyFeedLoad.js",
+    "shimy:chat": "./scripts/k6-run-report.sh shimy/shimyChatLoad.js",
+    "shimy:chat:typing": "MODE=typing ./scripts/k6-run-report.sh shimy/shimyChatLoad.js",
+    "shimy:chat:smoke": "PROFILE=smoke ./scripts/k6-run-report.sh shimy/shimyChatLoad.js",
+    "shimy:chat:load": "PROFILE=load ./scripts/k6-run-report.sh shimy/shimyChatLoad.js",
+    "shimy:chat:load:typing": "PROFILE=load MODE=typing ./scripts/k6-run-report.sh shimy/shimyChatLoad.js",
+    "shimy:chat:stress": "PROFILE=stress ./scripts/k6-run-report.sh shimy/shimyChatLoad.js",
+    "shimy:chat:stress:typing": "PROFILE=stress MODE=typing ./scripts/k6-run-report.sh shimy/shimyChatLoad.js"
+  },
+  "keywords": [
+    "k6",
+    "performance-testing",
+    "load-testing",
+    "stress-test",
+    "qa",
+    "automation"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {}
+}

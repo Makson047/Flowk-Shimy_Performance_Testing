@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Shimy Load Testing Report</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    max-width: 920px; margin: 2rem auto; padding: 0 1rem; color: #172b4d; line-height: 1.55; }
+  h1 { font-size: 1.7rem; }
+  h2 { font-size: 1.25rem; margin-top: 2rem; border-bottom: 1px solid #dfe1e6; padding-bottom: .25rem; }
+  h3 { font-size: 1.05rem; margin-top: 1.5rem; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .95rem; }
+  th, td { border: 1px solid #dfe1e6; padding: .55rem .75rem; text-align: left; vertical-align: top; }
+  th { background: #f4f5f7; font-weight: 600; }
+  code { background: #f4f5f7; padding: .1rem .35rem; border-radius: 3px; font-size: .92em; }
+  blockquote.tldr { background: #deebff; border-left: 4px solid #0052cc; padding: 1rem 1.25rem; margin: 1.25rem 0; border-radius: 3px; }
+  blockquote.note { background: #fffae6; border-left: 4px solid #ffab00; padding: 1rem 1.25rem; margin: 1rem 0; border-radius: 3px; }
+  blockquote.warn { background: #ffebe6; border-left: 4px solid #de350b; padding: 1rem 1.25rem; margin: 1rem 0; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<h1>Shimy Load Testing Report</h1>
+
+<blockquote class="tldr">
+<strong>TL;DR.</strong> Chat is production-ready for the tested range (up to <strong>50 concurrent users</strong>, no signs of stress). Feed is <strong>not production-ready under any meaningful load</strong> — it noticeably degrades from ~50 concurrent users and fails for the majority of users at 500+. Backend optimization of <code>/api/v1/feed/</code> is required before launch.
+</blockquote>
+
+<h2>Document info</h2>
+<table>
+  <tr><th>Date</th><td>2026-05-04</td></tr>
+  <tr><th>Environment tested</th><td><code>api.shimy.app</code> (dev)</td></tr>
+  <tr><th>Tool</th><td>k6 — open-source load testing framework</td></tr>
+  <tr><th>Test accounts</th><td>50 dedicated test users grouped into 25 chat pairs</td></tr>
+  <tr><th>Endpoints under test</th><td><code>GET /api/v1/feed/</code> (REST) and <code>wss://api.shimy.app/ws/connect</code> (WebSocket chat)</td></tr>
+  <tr><th>Test runs included</th><td>8 (2 smoke + 3 load + 3 stress)</td></tr>
+</table>
+
+<h2>Executive Summary</h2>
+<table>
+  <thead>
+    <tr><th>Endpoint</th><th>Verdict</th><th>Comfortable for</th><th>Breaks at</th><th>Headline metric</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Feed (REST)</strong></td>
+      <td>🔴 <strong>Not ready</strong></td>
+      <td>≤ 10 concurrent users</td>
+      <td>500+ users</td>
+      <td>At 1 000 users, <strong>3 out of 4 requests fail</strong>; the average user waits 30+ seconds</td>
+    </tr>
+    <tr>
+      <td><strong>Chat (WebSocket)</strong></td>
+      <td>🟢 <strong>Ready</strong> for tested range</td>
+      <td>≤ 50 concurrent users</td>
+      <td>Ceiling not reached in this test</td>
+      <td>Message round-trip stays at <strong>245 ms</strong> even under stress</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>The two parts of the product behave very differently.</strong> Chat is robust and fast. Feed is the bottleneck — it cannot serve a typical social-app audience without backend changes.</p>
+
+<h2>What was tested</h2>
+
+<p>Two endpoints, both critical to the user experience:</p>
+<ol>
+  <li><strong>Feed (REST):</strong> <code>GET /api/v1/feed/?radius&amp;latitude&amp;longitude</code> — what users see when they open the app.</li>
+  <li><strong>Chat (WebSocket):</strong> real-time messaging between matched users (<code>chat.send</code> / <code>chat.message</code>).</li>
+</ol>
+
+<p>Each endpoint was exercised under three escalating profiles:</p>
+
+<table>
+  <thead><tr><th>Profile</th><th>Purpose</th><th>Concurrent users</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Smoke</strong></td><td>Sanity check — does it work at all?</td><td>10</td></tr>
+    <tr><td><strong>Load</strong></td><td>Baseline — how it behaves under expected demand</td><td>50 (chat) / 200 (feed)</td></tr>
+    <tr><td><strong>Stress</strong></td><td>Find the breaking point</td><td>50 (chat, ceiling-limited) / 1 000 (feed)</td></tr>
+  </tbody>
+</table>
+
+<blockquote class="note">
+<strong>Note on “concurrent users”.</strong> Follows the standard SaaS definition — parallel user sessions active in the system at the same time (think “200 users with the app open right now”), not “200 button taps in the same millisecond”. Each simulated user pauses 1 second between actions, mirroring real human behaviour.
+</blockquote>
+
+<h2>Results — Feed (REST)</h2>
+
+<h3>Performance under increasing load</h3>
+<table>
+  <thead><tr><th>Test</th><th>Concurrent users</th><th>Average wait time</th><th>95% of users wait at most</th><th>Failure rate</th></tr></thead>
+  <tbody>
+    <tr><td>Smoke</td><td>10</td><td>0.3 s</td><td><strong>0.5 s</strong></td><td>0%</td></tr>
+    <tr><td>Load</td><td>200</td><td>11.8 s</td><td><strong>15.6 s</strong></td><td>0%</td></tr>
+    <tr><td>Stress</td><td>1 000</td><td>27.8 s</td><td><strong>37.9 s</strong></td><td><strong>58%</strong></td></tr>
+  </tbody>
+</table>
+
+<h3>Where things start to go wrong</h3>
+<p>We have a moment-by-moment recording of the stress test. The system passes through three clear stages:</p>
+
+<table>
+  <thead><tr><th>Concurrent users</th><th>What happens</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Up to ~80</strong></td><td>Everything works as designed (latency under 1 second).</td></tr>
+    <tr><td><strong>80 – 470</strong></td><td>Server stays online but becomes very slow. Users wait 4–20 seconds for the feed. No error messages, but most users would close the app.</td></tr>
+    <tr><td><strong>470 – 720</strong></td><td>Errors begin to appear (HTTP 5xx). About 1 in 10 users sees “Failed to load”.</td></tr>
+    <tr><td><strong>720+</strong></td><td>Server is overloaded. Half or more of all requests fail. Users see error screens.</td></tr>
+    <tr><td><strong>1 000</strong></td><td>Catastrophic. <strong>80% of requests fail.</strong> Average response time exceeds 30 seconds.</td></tr>
+  </tbody>
+</table>
+
+<h3>What this means in user terms</h3>
+<blockquote class="warn">
+If 100 users open Shimy at the same time on the current dev backend, <strong>most of them would see the feed take 4–6 seconds to appear</strong>. At 200 users, the average wait climbs to <strong>15 seconds</strong>. At 1 000 users, <strong>3 out of 4 see an error</strong> and the rest wait half a minute.
+</blockquote>
+
+<h3>Root cause (high-level)</h3>
+<p>The system does not crash from too many connections — it is simply <strong>slow at processing each individual feed request</strong>. Even with no load at all, a single feed request takes ~600 ms — already significant for a REST API. Under load, requests pile up faster than the server can serve them, and eventually the load balancer cuts off requests that take longer than ~30 seconds (returning 5xx errors).</p>
+
+<p>The bottleneck is most likely the geo-search query inside the feed endpoint (database-level), or limits on how many requests the server can process in parallel. A focused investigation by the backend team is required.</p>
+
+<h2>Results — Chat (WebSocket)</h2>
+
+<h3>Performance under increasing load</h3>
+<table>
+  <thead><tr><th>Test</th><th>Concurrent users</th><th>Session duration</th><th>Message delivery time (95%)</th><th>Delivery rate</th><th>Connection failures</th></tr></thead>
+  <tbody>
+    <tr><td>Smoke</td><td>10</td><td>30 s</td><td>n/a (smoke skips RTT)</td><td>—</td><td>0</td></tr>
+    <tr><td>Load (send)</td><td>50</td><td>2 min</td><td><strong>245 ms</strong></td><td>98%</td><td>0</td></tr>
+    <tr><td>Load (typing)</td><td>50</td><td>2 min</td><td>n/a (ephemeral)</td><td>98%</td><td>0</td></tr>
+    <tr><td>Stress (send)</td><td>50</td><td>5 min</td><td><strong>245 ms</strong></td><td>99%</td><td>0</td></tr>
+    <tr><td>Stress (typing)</td><td>50</td><td>5 min</td><td>n/a</td><td>99%</td><td>0</td></tr>
+  </tbody>
+</table>
+
+<h3>What the numbers mean</h3>
+<ul>
+  <li><strong>245 ms</strong> is the time between one peer pressing “send” and the other peer’s screen receiving the message. That is in the same range as WhatsApp / iMessage on dev infrastructure — <strong>good</strong>.</li>
+  <li><strong>0 connection failures</strong> across all chat tests, including 5-minute sessions under stress.</li>
+  <li><strong>Message delivery rate stays above 98%</strong> even under stress; no losses caused by the server.</li>
+  <li><strong>Round-trip time does not change between load and stress</strong> (245 ms in both cases), meaning the chat infrastructure is not breaking a sweat at 50 concurrent users.</li>
+</ul>
+
+<h3>What we did NOT test</h3>
+<p>The Shimy server enforces a “one WebSocket per user” rule (a second connection from the same user closes the first one). Because we have only 50 test accounts, <strong>50 concurrent users is the hard ceiling we could reach</strong>. The real chat capacity is therefore unknown — it could comfortably handle several hundred or several thousand more, but we cannot prove it without a larger pool of test accounts.</p>
+
+<h2>What this means for the product</h2>
+<table>
+  <thead><tr><th>Concurrent users in production</th><th>Feed user experience</th><th>Chat user experience</th></tr></thead>
+  <tbody>
+    <tr><td><strong>10</strong> (early days, beta)</td><td>✅ Excellent</td><td>✅ Excellent</td></tr>
+    <tr><td><strong>50</strong></td><td>🟡 Noticeable lag (2–3 s)</td><td>✅ Excellent</td></tr>
+    <tr><td><strong>100</strong></td><td>🟠 Painful (4–6 s)</td><td>✅ Excellent</td></tr>
+    <tr><td><strong>200</strong></td><td>🔴 Most users see 10+ s spinner</td><td>✅ Excellent</td></tr>
+    <tr><td><strong>500</strong></td><td>🔴 ~10% see error messages</td><td>✅ Excellent (untested but extrapolated)</td></tr>
+    <tr><td><strong>1 000</strong></td><td>⚫ 75% see error messages</td><td>Unknown (test ceiling not reached)</td></tr>
+  </tbody>
+</table>
+
+<p><strong>Practical implication for launch planning.</strong> If the expected peak audience for Shimy is anywhere above ~80 simultaneously-online users, the feed must be optimized before going live. Chat does not block launch.</p>
+
+<h2>Recommendations &amp; Next Steps</h2>
+
+<h3>Immediate (blocking for production launch)</h3>
+<ol>
+  <li><strong>Optimize the feed endpoint.</strong> The backend team should investigate the geo-search query and any database / connection pool limits. Even modest improvements (e.g. caching, indexing) typically yield 5–10× throughput gains here.</li>
+  <li><strong>Re-run feed stress test after optimization</strong> to measure the impact and validate the fix.</li>
+</ol>
+
+<h3>Short-term (recommended before broad rollout)</h3>
+<ol start="3">
+  <li><strong>Locate the precise feed degradation point.</strong> A focused tuning run with 30 / 50 / 75 / 100 concurrent users would tell us the exact number where the feed starts violating SLA. Today we only know “somewhere between 10 and 86”.</li>
+  <li><strong>Expand the test-user pool to 200+</strong> so we can probe the real chat ceiling. Until we have a larger pool, the chat capacity statement is “at least 50, more is unknown”.</li>
+</ol>
+
+<h3>Medium-term</h3>
+<ol start="5">
+  <li><strong>Establish business-defined SLA targets.</strong> Today the test thresholds (95% of feed requests under 1.5 s) are baseline values borrowed from the Flowk project. Once Shimy product owners agree on the user-facing SLA, thresholds can be aligned and used in CI to prevent future regressions.</li>
+</ol>
+
+<h2>Glossary (for non-technical readers)</h2>
+<table>
+  <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Concurrent user</strong></td><td>A simulated user who has the app open and is performing actions in parallel with other users. Not “everyone clicking the same button at the same instant”.</td></tr>
+    <tr><td><strong>Latency / response time</strong></td><td>How long the user waits between an action and seeing a result.</td></tr>
+    <tr><td><strong>p95 latency</strong></td><td>The wait time experienced by 95% of users — i.e. only 5% wait longer than this. The standard “worst typical case” metric in performance testing.</td></tr>
+    <tr><td><strong>5xx errors</strong></td><td>Server-side failures — the user sees a “Something went wrong” / “Failed to load” message.</td></tr>
+    <tr><td><strong>Round-trip time (RTT)</strong></td><td>For chat: the time between one user sending a message and the other user’s device receiving it.</td></tr>
+    <tr><td><strong>Smoke / load / stress</strong></td><td>Test profiles of increasing intensity. Smoke = “does it work?”. Load = “is it fast enough under expected demand?”. Stress = “where does it break?”.</td></tr>
+  </tbody>
+</table>
+
+<h2>Appendix — Artifacts</h2>
+<p>All raw data is preserved and can be re-analyzed at any time.</p>
+<table>
+  <thead><tr><th>Artifact</th><th>Location</th></tr></thead>
+  <tbody>
+    <tr><td>Per-run HTML reports (with charts)</td><td><code>load-tests/reports/Shimy/20260504_*/summary.html</code></td></tr>
+    <tr><td>Compare index (sortable, groupable)</td><td><code>load-tests/reports/Shimy/index.html</code></td></tr>
+    <tr><td>Raw NDJSON time-series (for replays)</td><td><code>load-tests/reports/Shimy/20260504_*/raw.ndjson</code></td></tr>
+    <tr><td>Feed stress deep-dive (technical)</td><td><code>load-tests/reports/Shimy/2026-05-04_feed-stress-deep-dive.md</code></td></tr>
+    <tr><td>Overall test session summary</td><td><code>load-tests/reports/Shimy/2026-05-04_load-test-summary.md</code></td></tr>
+    <tr><td>Test scripts</td><td><code>load-tests/shimy/shimyFeedLoad.js</code>, <code>load-tests/shimy/shimyChatLoad.js</code></td></tr>
+  </tbody>
+</table>
+
+</body>
+</html>

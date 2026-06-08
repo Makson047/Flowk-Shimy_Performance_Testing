@@ -1,0 +1,415 @@
+
+<html>
+<head>
+  <title>k6 Load Test Report</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Inter", Roboto, Arial, sans-serif;
+      padding: 2rem; background-color: #fafafa; color: #222; line-height: 1.45; }
+    h1, h2, h3 { margin-bottom: 0.5rem; font-weight: 600; color: #111; }
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.2rem; display: flex; align-items: center; gap: .5rem; }
+    h2 svg { width: 1rem; height: 1rem; }
+    p.note { color: #555; font-size: 0.9rem; margin-top: 0; margin-bottom: 1.5rem; }
+    section { margin-bottom: 2rem; background: #fff; padding: 1.5rem 2rem;
+      border-radius: 12px; box-shadow: 0 10px 24px -8px rgba(0,0,0,0.12); }
+    table { border-collapse: collapse; width: 100%; margin-top: 2rem; font-size: 0.9rem; }
+    th, td { border: 1px solid #ddd; padding: 0.75rem; text-align: left; vertical-align: top; }
+    th { background-color: #f4f4f4; font-weight: 600; }
+    tr:nth-child(even) { background: #fafafa; }
+    .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem; align-items: flex-start; }
+    .chart-card { background: #fff; border-radius: 12px; padding: 1rem 1rem 2rem;
+      box-shadow: 0 10px 24px -8px rgba(0,0,0,0.12); }
+    canvas { max-width: 100%; height: 260px; }
+    .kpi-row { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 1rem; }
+    .kpi-box { background: #fff; border-radius: 12px; box-shadow: 0 10px 24px -8px rgba(0,0,0,0.12);
+      padding: 1rem 1.25rem; min-width: 220px; flex: 0 0 auto; }
+    .kpi-label { font-size: 0.7rem; color: #666; text-transform: uppercase;
+      margin-bottom: 0.4rem; letter-spacing: .03em; font-weight: 500; }
+    .kpi-value { font-size: 1.1rem; font-weight: 600; color: #111; }
+    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+    .meta-box { background: #fff; border-radius: 12px; box-shadow: 0 10px 24px -8px rgba(0,0,0,0.12);
+      padding: 1rem 1.25rem; font-size: .9rem; line-height: 1.4; }
+    .meta-label { font-size: .7rem; letter-spacing: .03em; text-transform: uppercase;
+      color: #666; font-weight: 500; margin-bottom: .25rem; }
+    .meta-value { font-weight: 600; color: #111; word-break: break-all; }
+    .verdict-pill { display: inline-block; padding: .35rem .8rem; border-radius: 999px;
+      font-weight: 600; font-size: .85rem; }
+    .verdict-pass { background: #d4f5dc; color: #14532d; }
+    .verdict-fail { background: #ffe1e0; color: #7f1d1d; }
+  </style>
+</head>
+<body>
+  <h1>k6 Load Test Report</h1>
+  <p class="note">
+    Auto-generated from k6 <code>summary.json</code>. Use these metrics for capacity / stress analysis,
+    SLA validation and regression tracking.
+  </p>
+
+  <section>
+    <h2>Test metadata</h2>
+    <div class="meta-grid">
+      <div class="meta-box"><div class="meta-label">Test file executed</div>
+        <div class="meta-value">shimy/shimyChatLoad.js</div></div>
+      <div class="meta-box"><div class="meta-label">Run timestamp</div>
+        <div class="meta-value">20260514_135538</div></div>
+      <div class="meta-box"><div class="meta-label">Max VUs observed</div>
+        <div class="meta-value">50</div></div>
+      <div class="meta-box"><div class="meta-label">Threshold verdict</div>
+        <div class="meta-value">
+          <span class="verdict-pill verdict-pass">
+            ✅ PASS (3/3)
+          </span>
+        </div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>High-level KPIs</h2>
+    
+    <div class="kpi-row">
+      <div class="kpi-box">
+        <div class="kpi-label">WS sessions OK</div>
+        <div class="kpi-value">69</div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-label">WS handshake failures</div>
+        <div class="kpi-value">0</div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-label">Avg / p95 / max session (ms)</div>
+        <div class="kpi-value">
+          118780.83 / 120528.80 / 120610.00
+        </div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-label">Total WS messages received</div>
+        <div class="kpi-value">5508</div>
+      </div>
+      
+      <div class="kpi-box">
+        <div class="kpi-label">Chat delivery latency p50 / p95 / p99 (ms)</div>
+        <div class="kpi-value">
+          163.00 / 250.00 / 296.21
+        </div>
+      </div>
+      
+      <div class="kpi-box">
+        <div class="kpi-label">Chat messages sent</div>
+        <div class="kpi-value">5710</div>
+      </div>
+      
+      
+      <div class="kpi-box" style="border-left:4px solid #ea4335">
+        <div class="kpi-label">⚠ Closed by 4409 (duplicate session)</div>
+        <div class="kpi-value">1</div>
+      </div>
+      
+    </div>
+    <p class="note">
+      WebSocket mode metrics. Sessions OK = handshake 101. Chat delivery latency = time from
+      <code>chat.send</code> on one peer to <code>chat.message</code> on the other peer.
+    </p>
+  
+  </section>
+
+  <section>
+    <h2>Core performance visuals</h2>
+    
+    <div class="charts-grid">
+      <div class="chart-card"><h3>Pass vs Fail (sessions)</h3>
+        <p class="note">Successful handshakes (101) vs failed.</p>
+        <canvas id="passFailChart"></canvas></div>
+      <div class="chart-card"><h3>Session duration (ms)</h3>
+        <p class="note">Drop in avg or spike in p95 may mean server force-closes clients.</p>
+        <canvas id="wsDurationChart"></canvas></div>
+      <div class="chart-card"><h3>WS messages received</h3>
+        <p class="note">Total messages server pushed to clients.</p>
+        <canvas id="wsMsgChart"></canvas></div>
+      <div class="chart-card"><h3>Sessions OK vs Failed</h3>
+        <p class="note">Overall handshake stability.</p>
+        <canvas id="wsSessionChart"></canvas></div>
+      <div class="chart-card"><h3>Chat delivery latency (ms)</h3>
+        <p class="note">avg / p50 / p95 / p99 / max — round-trip from sender to peer.</p>
+        <canvas id="chatRttChart"></canvas></div>
+    </div>
+  
+  </section>
+
+  
+    <section>
+      <h2>Timeline (per 5s buckets)</h2>
+      <p class="note">
+        How the test evolved over time — the moment p95 starts climbing or RPS starts plateauing
+        is usually where the system began to degrade.
+      </p>
+      <div class="charts-grid">
+        <div class="chart-card"><h3>Active VUs over time</h3>
+          <canvas id="tlVusChart"></canvas></div>
+        
+        <div class="chart-card"><h3>Latency p95 over time (ms)</h3>
+          <canvas id="tlLatencyChart"></canvas></div>
+        
+        <div class="chart-card"><h3>Chat delivery p95 over time (ms)</h3>
+          <canvas id="tlChatRttChart"></canvas></div>
+        <div class="chart-card"><h3>Errors over time (counts per bucket)</h3>
+          <canvas id="tlErrorsChart"></canvas></div>
+      </div>
+    </section>
+  
+
+  <section>
+    <h2>Threshold breakdown</h2>
+    <table>
+      <thead><tr><th>Metric</th><th>Threshold</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr>
+                    <td>chat_delivery_latency_ms</td>
+                    <td><code>p(95)<2000</code></td>
+                    <td>✅ pass</td>
+                  </tr><tr>
+                    <td>socket_connection_failures</td>
+                    <td><code>count<5</code></td>
+                    <td>✅ pass</td>
+                  </tr><tr>
+                    <td>socket_session_duration</td>
+                    <td><code>avg>2000</code></td>
+                    <td>✅ pass</td>
+                  </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Raw metrics table</h2>
+    <table>
+      <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+      <tbody>
+        
+              <tr>
+                <td>Blocked Time (ms)</td>
+                <td>p(90): 0.02 ms<br>p(95): 0.02 ms<br>p(99): 146.15 ms<br>avg: 5.74 ms<br>min: 0.00 ms<br>med: 0.01 ms<br>max: 286.49 ms<br>p(50): 0.01 ms</td>
+              </tr>
+              <tr>
+                <td>Chat delivery latency (ms, Trend)</td>
+                <td>max: 561.00 ms, Trend<br>p(50): 163.00 ms, Trend<br>p(90): 235.00 ms, Trend<br>p(95): 250.00 ms, Trend<br>p(99): 296.21 ms, Trend<br>avg: 180.04 ms, Trend<br>min: 140.00 ms, Trend<br>med: 163.00 ms, Trend<br>thresholds: NaN ms, Trend</td>
+              </tr>
+              <tr>
+                <td>Chat messages sent (chat.send)</td>
+                <td>rate: 20.26 chat.send<br>count: 5710.00 chat.send</td>
+              </tr>
+              <tr>
+                <td>checks</td>
+                <td>1.00 </td>
+              </tr>
+              <tr>
+                <td>Connection Time (ms)</td>
+                <td>max: 134.78 ms<br>p(50): 0.00 ms<br>p(90): 0.00 ms<br>p(95): 0.00 ms<br>p(99): 68.74 ms<br>avg: 2.70 ms<br>min: 0.00 ms<br>med: 0.00 ms</td>
+              </tr>
+              <tr>
+                <td>Data Received (bytes)</td>
+                <td>count: 2345408.00 bytes<br>rate: 8323.12 bytes</td>
+              </tr>
+              <tr>
+                <td>Data Sent (bytes)</td>
+                <td>count: 1145080.00 bytes<br>rate: 4063.53 bytes</td>
+              </tr>
+              <tr>
+                <td>Expected Response Duration (ms)</td>
+                <td>min: 501.74 ms<br>med: 526.72 ms<br>max: 717.44 ms<br>p(50): 526.72 ms<br>p(90): 628.70 ms<br>p(95): 716.32 ms<br>p(99): 717.32 ms<br>avg: 565.58 ms</td>
+              </tr>
+              <tr>
+                <td>Failed Requests</td>
+                <td>0.00 </td>
+              </tr>
+              <tr>
+                <td>Iteration Duration (ms)</td>
+                <td>p(99): 121593.74 ms<br>avg: 119757.07 ms<br>min: 4649.96 ms<br>med: 121477.15 ms<br>max: 121611.46 ms<br>p(50): 121477.15 ms<br>p(90): 121514.48 ms<br>p(95): 121529.95 ms</td>
+              </tr>
+              <tr>
+                <td>Max Virtual Users</td>
+                <td>50.00 </td>
+              </tr>
+              <tr>
+                <td>Request Send Time (ms)</td>
+                <td>med: 0.06 ms<br>max: 0.63 ms<br>p(50): 0.06 ms<br>p(90): 0.08 ms<br>p(95): 0.10 ms<br>p(99): 0.38 ms<br>avg: 0.07 ms<br>min: 0.02 ms</td>
+              </tr>
+              <tr>
+                <td>Response Receive Time (ms)</td>
+                <td>p(99): 0.27 ms<br>avg: 0.18 ms<br>min: 0.05 ms<br>med: 0.19 ms<br>max: 0.29 ms<br>p(50): 0.19 ms<br>p(90): 0.22 ms<br>p(95): 0.23 ms</td>
+              </tr>
+              <tr>
+                <td>Successful WebSocket handshakes (custom)</td>
+                <td>count: 69.00 custom<br>rate: 0.24 custom</td>
+              </tr>
+              <tr>
+                <td>TLS Handshaking Time (ms)</td>
+                <td>p(50): 0.00 ms<br>p(90): 0.00 ms<br>p(95): 0.00 ms<br>p(99): 75.52 ms<br>avg: 2.96 ms<br>min: 0.00 ms<br>med: 0.00 ms<br>max: 148.07 ms</td>
+              </tr>
+              <tr>
+                <td>Total HTTP Requests</td>
+                <td>count: 50.00 <br>rate: 0.18 </td>
+              </tr>
+              <tr>
+                <td>Total Iterations</td>
+                <td>count: 68.00 <br>rate: 0.24 </td>
+              </tr>
+              <tr>
+                <td>Total Request Duration (ms)</td>
+                <td>p(95): 716.32 ms<br>p(99): 717.32 ms<br>avg: 565.58 ms<br>min: 501.74 ms<br>med: 526.72 ms<br>max: 717.44 ms<br>p(50): 526.72 ms<br>p(90): 628.70 ms</td>
+              </tr>
+              <tr>
+                <td>Virtual Users (VUs)</td>
+                <td>4.00 VUs</td>
+              </tr>
+              <tr>
+                <td>Waiting Time (TTFB) (ms)</td>
+                <td>p(50): 526.51 TTFB<br>p(90): 628.45 TTFB<br>p(95): 716.02 TTFB<br>p(99): 717.09 TTFB<br>avg: 565.33 TTFB<br>min: 501.49 TTFB<br>med: 526.51 TTFB<br>max: 717.19 TTFB</td>
+              </tr>
+              <tr>
+                <td>WebSocket handshake failures (custom)</td>
+                <td>count: 0.00 custom<br>rate: 0.00 custom<br>thresholds: NaN custom</td>
+              </tr>
+              <tr>
+                <td>WebSocket messages received (custom)</td>
+                <td>count: 5508.00 custom<br>rate: 19.55 custom</td>
+              </tr>
+              <tr>
+                <td>WebSocket session duration (ms, Trend)</td>
+                <td>avg: 118780.83 ms, Trend<br>min: 3648.00 ms, Trend<br>med: 120476.00 ms, Trend<br>max: 120610.00 ms, Trend<br>p(50): 120476.00 ms, Trend<br>p(90): 120511.40 ms, Trend<br>p(95): 120528.80 ms, Trend<br>p(99): 120591.64 ms, Trend<br>thresholds: NaN ms, Trend</td>
+              </tr>
+              <tr>
+                <td>WS closes with code 4409 (duplicate session)</td>
+                <td>count: 1.00 duplicate session<br>rate: 0.00 duplicate session</td>
+              </tr>
+              <tr>
+                <td>ws_connecting</td>
+                <td>max: 641.47 <br>p(50): 475.21 <br>p(90): 528.13 <br>p(95): 578.41 <br>p(99): 630.41 <br>avg: 477.44 <br>min: 410.00 <br>med: 475.21 </td>
+              </tr>
+              <tr>
+                <td>ws_msgs_received</td>
+                <td>count: 5508.00 <br>rate: 19.55 </td>
+              </tr>
+              <tr>
+                <td>ws_msgs_sent</td>
+                <td>count: 5710.00 <br>rate: 20.26 </td>
+              </tr>
+              <tr>
+                <td>ws_session_duration</td>
+                <td>min: 3648.60 <br>med: 120476.97 <br>max: 120609.88 <br>p(50): 120476.97 <br>p(90): 120512.37 <br>p(95): 120529.17 <br>p(99): 120591.90 <br>avg: 118781.15 </td>
+              </tr>
+              <tr>
+                <td>ws_sessions</td>
+                <td>count: 101.00 <br>rate: 0.36 </td>
+              </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <script>
+    new Chart(document.getElementById('passFailChart'), {
+      type: 'pie',
+      data: {
+        labels: ['Passed', 'Failed'],
+        datasets: [{
+          data: [69, 0],
+          backgroundColor: ['#34a853', '#ea4335']
+        }]
+      },
+      options: { plugins: { legend: { position: 'top' } } }
+    });
+
+    
+
+    
+      new Chart(document.getElementById('wsDurationChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Avg ms', 'p95 ms', 'Max ms'],
+          datasets: [{
+            data: [118780.82608695653, 120528.8, 120610],
+            backgroundColor: '#007acc'
+          }]
+        },
+        options: { plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { callback: v => v + ' ms' } } } }
+      });
+
+      new Chart(document.getElementById('wsMsgChart'), {
+        type: 'bar',
+        data: { labels: ['Total messages received'],
+          datasets: [{ data: [5508], backgroundColor: '#4b9c5a' }] },
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+      });
+
+      new Chart(document.getElementById('wsSessionChart'), {
+        type: 'bar',
+        data: { labels: ['Sessions OK', 'Handshake Failed'],
+          datasets: [{ data: [69, 0],
+            backgroundColor: ['#34a853', '#ea4335'] }] },
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+      });
+
+      
+      new Chart(document.getElementById('chatRttChart'), {
+        type: 'bar',
+        data: {
+          labels: ['avg', 'p50', 'p95', 'p99', 'max'],
+          datasets: [{
+            data: [180.03531124863488, 163, 250, 296.20999999999987, 561],
+            backgroundColor: '#8e5af7'
+          }]
+        },
+        options: { plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { callback: v => v + ' ms' } } } }
+      });
+    
+
+    
+      const tl = [{"t":0,"vus":0,"rps":1.8,"p95":717.205,"chatRttP95":null,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":5,"vus":0,"rps":1.8,"p95":677.819,"chatRttP95":null,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":10,"vus":0,"rps":1.8,"p95":611.917,"chatRttP95":null,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":15,"vus":0,"rps":1.8,"p95":616.129,"chatRttP95":null,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":20,"vus":0,"rps":1.8,"p95":716.438,"chatRttP95":null,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":25,"vus":3,"rps":1,"p95":717.437,"chatRttP95":null,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":30,"vus":11,"rps":0,"p95":null,"chatRttP95":244,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":35,"vus":19,"rps":0,"p95":null,"chatRttP95":203,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":40,"vus":27,"rps":0,"p95":null,"chatRttP95":222,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":45,"vus":35,"rps":0,"p95":null,"chatRttP95":240,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":50,"vus":44,"rps":0,"p95":null,"chatRttP95":231,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":55,"vus":50,"rps":0,"p95":null,"chatRttP95":242,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":60,"vus":50,"rps":0,"p95":null,"chatRttP95":233,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":65,"vus":50,"rps":0,"p95":null,"chatRttP95":240,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":70,"vus":50,"rps":0,"p95":null,"chatRttP95":243,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":75,"vus":50,"rps":0,"p95":null,"chatRttP95":233,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":80,"vus":50,"rps":0,"p95":null,"chatRttP95":235,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":85,"vus":50,"rps":0,"p95":null,"chatRttP95":250,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":90,"vus":50,"rps":0,"p95":null,"chatRttP95":244,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":95,"vus":50,"rps":0,"p95":null,"chatRttP95":245,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":100,"vus":50,"rps":0,"p95":null,"chatRttP95":243,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":105,"vus":50,"rps":0,"p95":null,"chatRttP95":236,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":110,"vus":50,"rps":0,"p95":null,"chatRttP95":238,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":115,"vus":50,"rps":0,"p95":null,"chatRttP95":247,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":120,"vus":50,"rps":0,"p95":null,"chatRttP95":248,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":125,"vus":50,"rps":0,"p95":null,"chatRttP95":235,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":130,"vus":50,"rps":0,"p95":null,"chatRttP95":239,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":135,"vus":50,"rps":0,"p95":null,"chatRttP95":241,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":140,"vus":50,"rps":0,"p95":null,"chatRttP95":269,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":145,"vus":50,"rps":0,"p95":null,"chatRttP95":244,"feedLatencyP95":null,"wsSessions":3,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":150,"vus":50,"rps":0,"p95":null,"chatRttP95":265,"feedLatencyP95":null,"wsSessions":9,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":155,"vus":50,"rps":0,"p95":null,"chatRttP95":246,"feedLatencyP95":null,"wsSessions":9,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":160,"vus":50,"rps":0,"p95":null,"chatRttP95":285,"feedLatencyP95":null,"wsSessions":8,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":165,"vus":50,"rps":0,"p95":null,"chatRttP95":248,"feedLatencyP95":null,"wsSessions":8,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":170,"vus":50,"rps":0,"p95":null,"chatRttP95":261,"feedLatencyP95":null,"wsSessions":8,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":175,"vus":50,"rps":0,"p95":null,"chatRttP95":351,"feedLatencyP95":null,"wsSessions":6,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":180,"vus":50,"rps":0,"p95":null,"chatRttP95":250,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":185,"vus":50,"rps":0,"p95":null,"chatRttP95":246,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":190,"vus":50,"rps":0,"p95":null,"chatRttP95":251,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":195,"vus":50,"rps":0,"p95":null,"chatRttP95":236,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":200,"vus":50,"rps":0,"p95":null,"chatRttP95":246,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":205,"vus":50,"rps":0,"p95":null,"chatRttP95":259,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":210,"vus":50,"rps":0,"p95":null,"chatRttP95":244,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":215,"vus":50,"rps":0,"p95":null,"chatRttP95":285,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":220,"vus":50,"rps":0,"p95":null,"chatRttP95":259,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":225,"vus":50,"rps":0,"p95":null,"chatRttP95":252,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":230,"vus":50,"rps":0,"p95":null,"chatRttP95":244,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":235,"vus":50,"rps":0,"p95":null,"chatRttP95":237,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":240,"vus":50,"rps":0,"p95":null,"chatRttP95":245,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":245,"vus":50,"rps":0,"p95":null,"chatRttP95":239,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":250,"vus":50,"rps":0,"p95":null,"chatRttP95":253,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":255,"vus":50,"rps":0,"p95":null,"chatRttP95":244,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":260,"vus":50,"rps":0,"p95":null,"chatRttP95":344,"feedLatencyP95":null,"wsSessions":0,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":265,"vus":50,"rps":0,"p95":null,"chatRttP95":251,"feedLatencyP95":null,"wsSessions":1,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":270,"vus":45,"rps":0,"p95":null,"chatRttP95":256,"feedLatencyP95":null,"wsSessions":7,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":275,"vus":25,"rps":0,"p95":null,"chatRttP95":221,"feedLatencyP95":null,"wsSessions":9,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0},{"t":280,"vus":4,"rps":0,"p95":null,"chatRttP95":null,"feedLatencyP95":null,"wsSessions":1,"wsHandshakeFails":0,"errors4xx":0,"errors5xx":0,"errorsNet":0}];
+      const tlLabels = tl.map(b => b.t + 's');
+
+      new Chart(document.getElementById('tlVusChart'), {
+        type: 'line',
+        data: { labels: tlLabels, datasets: [{ label: 'VUs', data: tl.map(b => b.vus),
+          borderColor: '#007acc', tension: 0.2, fill: false }] },
+        options: { plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } } }
+      });
+
+      
+
+      new Chart(document.getElementById('tlLatencyChart'), {
+        type: 'line',
+        data: { labels: tlLabels, datasets: [{ label: 'p95 latency (ms)',
+          data: tl.map(b => b.p95), borderColor: '#ea4335', tension: 0.2, fill: false }] },
+        options: { plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { callback: v => v + ' ms' } } } }
+      });
+
+      
+
+      
+      new Chart(document.getElementById('tlChatRttChart'), {
+        type: 'line',
+        data: { labels: tlLabels, datasets: [{ label: 'Chat delivery p95 (ms)',
+          data: tl.map(b => b.chatRttP95), borderColor: '#8e5af7', tension: 0.2, fill: false }] },
+        options: { plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { callback: v => v + ' ms' } } } }
+      });
+
+      
+      new Chart(document.getElementById('tlErrorsChart'), {
+        type: 'line',
+        data: { labels: tlLabels, datasets: [
+          { label: '4xx', data: tl.map(b => b.errors4xx), borderColor: '#f59e0b', tension: 0.2, fill: false },
+          { label: '5xx', data: tl.map(b => b.errors5xx), borderColor: '#ea4335', tension: 0.2, fill: false },
+          { label: 'network', data: tl.map(b => b.errorsNet), borderColor: '#6b7280', tension: 0.2, fill: false }
+        ] },
+        options: { scales: { y: { beginAtZero: true } } }
+      });
+    
+  </script>
+</body>
+</html>

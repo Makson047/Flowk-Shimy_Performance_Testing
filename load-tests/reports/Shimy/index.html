@@ -1,0 +1,375 @@
+<html>
+<head>
+  <title>Shimy — k6 runs</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Inter", Roboto, Arial, sans-serif;
+      padding: 2rem; background-color: #fafafa; color: #222; }
+    h1 { font-size: 1.4rem; margin-bottom: .25rem; }
+    p.note { color: #555; margin-top: 0; margin-bottom: 1.5rem; font-size: .9rem; }
+    .toolbar { display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; }
+    .toolbar input[type="search"] {
+      padding: .5rem .75rem; border: 1px solid #ccc; border-radius: 8px;
+      font-size: .9rem; width: 280px; outline: none;
+    }
+    .toolbar input[type="search"]:focus { border-color: #007acc; }
+    .toolbar .count { color: #666; font-size: .85rem; }
+    table { border-collapse: collapse; width: 100%; font-size: .9rem; background: #fff;
+      box-shadow: 0 10px 24px -8px rgba(0,0,0,0.12); border-radius: 12px; overflow: hidden; }
+    th, td { border-bottom: 1px solid #eee; padding: .65rem .9rem; text-align: left; vertical-align: top; }
+    th {
+      background: #f4f4f4; font-weight: 600;
+      cursor: pointer; user-select: none; white-space: nowrap;
+    }
+    th:hover { background: #ececec; }
+    th .arrow { font-size: .7rem; color: #888; margin-left: .25rem; }
+    tr:hover td { background: #fafafa; }
+    a { color: #007acc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .md-link { color: #888; font-size: .8rem; }
+    .verdict-pill { display: inline-block; padding: .2rem .6rem; border-radius: 999px;
+      font-weight: 600; font-size: .75rem; }
+    .verdict-pass { background: #d4f5dc; color: #14532d; }
+    .verdict-fail { background: #ffe1e0; color: #7f1d1d; }
+    .verdict-na { background: #eee; color: #555; }
+    .pill {
+      display: inline-block; padding: .15rem .5rem; border-radius: 6px;
+      font-size: .72rem; font-weight: 500; background: #eef3fa; color: #1d4ed8;
+    }
+    .pill-mode { background: #f3e8ff; color: #6b21a8; }
+    .pill-tl { background: #fff7ed; color: #9a3412; }
+    .test-cell { display: flex; flex-direction: column; gap: .25rem; }
+    .test-cell .file { font-weight: 600; color: #111; }
+    .test-cell .pills { display: flex; gap: .35rem; flex-wrap: wrap; }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .empty { color: #aaa; }
+
+    /* Group view */
+    .group-header td {
+      background: #f9fbfe; cursor: pointer; font-weight: 500;
+      padding: .55rem .9rem;
+    }
+    .group-header td:hover { background: #eff5fc; }
+    .group-header .caret {
+      color: #666; margin-right: .4rem; display: inline-block;
+      width: .9rem; font-size: .75rem;
+    }
+    .group-header .group-name {
+      font-weight: 600; color: #111; margin-right: .75rem;
+    }
+    .group-header .group-meta {
+      color: #555; font-size: .82rem;
+    }
+    .group-header .group-meta .verdict-pill {
+      margin-right: .25rem; font-size: .68rem; padding: .1rem .45rem;
+    }
+    .group-row td:first-child { padding-left: 2.2rem; }
+
+    /* Toolbar additions */
+    .toolbar label.toggle {
+      font-size: .85rem; color: #333; cursor: pointer; user-select: none;
+      display: inline-flex; align-items: center; gap: .35rem;
+    }
+    .toolbar button {
+      padding: .4rem .75rem; border: 1px solid #ccc; border-radius: 6px;
+      background: white; cursor: pointer; font-size: .82rem; color: #333;
+    }
+    .toolbar button:hover { background: #f4f4f4; }
+    .toolbar button:disabled { opacity: .5; cursor: not-allowed; }
+    .toolbar .group-buttons { display: flex; gap: .35rem; }
+  </style>
+</head>
+<body>
+  <h1>Shimy — k6 runs (19)</h1>
+  <p class="note">
+    Generated 2026-05-14T11:00:21.133Z. Click a column header to sort. Filter searches
+    test file / profile / mode / verdict / timestamp.
+  </p>
+
+  <div class="toolbar">
+    <input type="search" id="filter" placeholder="Filter (e.g. shimyFeed, stress, FAIL)…" />
+    <label class="toggle"><input type="checkbox" id="groupToggle" /> Group by test</label>
+    <span class="group-buttons">
+      <button id="expandAll" type="button">Expand all</button>
+      <button id="collapseAll" type="button">Collapse all</button>
+    </span>
+    <span class="count" id="count"></span>
+  </div>
+
+  <table id="runsTable">
+    <thead>
+      <tr>
+        <th data-key="timestamp">When <span class="arrow">▼</span></th>
+        <th data-key="testFile">Test</th>
+        <th data-key="verdict">Verdict</th>
+        <th data-key="maxVus" class="num">VUs</th>
+        <th data-key="rps" class="num">RPS</th>
+        <th data-key="total" class="num">Total reqs</th>
+        <th data-key="p95" class="num">p95 (ms)</th>
+        <th data-key="failRate" class="num">Fail %</th>
+        <th data-key="wsOk" class="num">WS ok / fail</th>
+        <th data-key="chatP95" class="num">Chat p95 (ms)</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <script>
+    const RUNS = [{"timestamp":"20260514_135538","prettyTs":"2026-05-14 13:55","relPath":"20260514_135538","hasMd":true,"testFile":"shimyChatLoad","profile":"load","mode":"","timeline":true,"maxVus":50,"total":50,"rps":0.17743432233958908,"p95":716.3237,"failRate":0,"wsOk":69,"wsFail":0,"chatP95":250,"verdict":"PASS","totalPass":3,"totalChecks":3},{"timestamp":"20260514_134703","prettyTs":"2026-05-14 13:47","relPath":"20260514_134703","hasMd":true,"testFile":"shimyChatLoad","profile":"load","mode":"","timeline":true,"maxVus":50,"total":50,"rps":0.17654058450010035,"p95":748.33295,"failRate":0,"wsOk":69,"wsFail":0,"chatP95":0,"verdict":"PASS","totalPass":3,"totalChecks":3},{"timestamp":"20260511_093540","prettyTs":"2026-05-11 09:35","relPath":"20260511_093540","hasMd":true,"testFile":"shimyChatLoad","profile":"stress","mode":"","timeline":true,"maxVus":50,"total":50,"rps":0.08540096674509241,"p95":511.27195,"failRate":0,"wsOk":50,"wsFail":0,"chatP95":166,"verdict":"PASS","totalPass":3,"totalChecks":3},{"timestamp":"20260511_092827","prettyTs":"2026-05-11 09:28","relPath":"20260511_092827","hasMd":true,"testFile":"shimyFeedLoad","profile":"stress","mode":"","timeline":true,"maxVus":1000,"total":10012,"rps":26.401373194171587,"p95":37762.0547,"failRate":0.4955053935277667,"wsOk":null,"wsFail":null,"chatP95":null,"verdict":"FAIL","totalPass":0,"totalChecks":2},{"timestamp":"20260511_092246","prettyTs":"2026-05-11 09:22","relPath":"20260511_092246","hasMd":true,"testFile":"shimyFeedLoad","profile":"load","mode":"","timeline":true,"maxVus":200,"total":4260,"rps":14.369672300635134,"p95":13297.43055,"failRate":0,"wsOk":null,"wsFail":null,"chatP95":null,"verdict":"FAIL","totalPass":1,"totalChecks":3},{"timestamp":"20260511_092023","prettyTs":"2026-05-11 09:20","relPath":"20260511_092023","hasMd":true,"testFile":"shimyChatLoad","profile":"smoke","mode":"","timeline":false,"maxVus":10,"total":50,"rps":0.4058213316882527,"p95":516.65665,"failRate":0,"wsOk":23,"wsFail":0,"chatP95":160.7,"verdict":"PASS","totalPass":3,"totalChecks":3},{"timestamp":"20260511_091828","prettyTs":"2026-05-11 09:18","relPath":"20260511_091828","hasMd":true,"testFile":"shimyFeedLoad","profile":"smoke","mode":"","timeline":false,"maxVus":10,"total":522,"rps":5.42361047255544,"p95":502.35285,"failRate":0,"wsOk":null,"wsFail":null,"chatP95":null,"verdict":"PASS","totalPass":2,"totalChecks":2},{"timestamp":"20260504_130742","prettyTs":"2026-05-04 13:07","relPath":"20260504_130742","hasMd":true,"testFile":"shimyChatLoad","profile":"stress","mode":"typing","timeline":true,"maxVus":50,"total":50,"rps":0.08495684966843313,"p95":701.3100999999999,"failRate":0,"wsOk":50,"wsFail":0,"chatP95":0,"verdict":"PASS","totalPass":3,"totalChecks":3},{"timestamp":"20260504_125657","prettyTs":"2026-05-04 12:56","relPath":"20260504_125657","hasMd":true,"testFile":"shimyChatLoad","profile":"stress","mode":"","timeline":true,"maxVus":50,"total":50,"rps":0.08491036101494429,"p95":710.93475,"failRate":0,"wsOk":50,"wsFail":0,"chatP95":245,"verdict":"PASS","totalPass":3,"totalChecks":3},{"timestamp":"20260504_124842","prettyTs":"2026-05-04 12:48","relPath":"20260504_124842","hasMd":true,"testFile":"shimyFeedLoad","profile":"stress","mode":"","timeline":true,"maxVus":1000,"total":9318,"rps":24.254897008522093,"p95":37906.7858,"failRate":0.5750160978750805,"wsOk":null,"wsFail":null,"chatP95":null,"verdict":"FAIL","totalPass":0,"totalChecks":2},{"timestamp":"20260504_123949","prettyTs":"2026-05-04 12:39","relPath":"20260504_123949","hasMd":true,"testFile":"shimyChatLoad","profile":"load","mode":"typing","timeline":true,"maxVus":50,"total":50,"rps":0.17706297658735567,"p95":715.744,"failRate":0,"wsOk":68,"wsFail":0,"chatP95":0,"verdict":"PASS","totalPass":3,"totalChecks":3},{"timestamp":"20260504_123350","prettyTs":"2026-05-04 12:33","relPath":"20260504_123350","hasMd":true,"testFile":"shimyChatLoad","profile":"load","mode":"","timeline":true,"maxVus":50,"total":50,"rps":0.17757200512844998,"p95":773.2659999999998,"failRate":0,"wsOk":68,"wsFail":0,"chatP95":245,"verdict":"PASS","totalPass":3,"totalChecks":3},{"timestamp":"20260504_122752","prettyTs":"2026-05-04 12:27","relPath":"20260504_122752","hasMd":true,"testFile":"shimyFeedLoad","profile":"load","mode":"","timeline":true,"maxVus":200,"total":3600,"rps":12.0809190427614,"p95":15636.9652,"failRate":0,"wsOk":null,"wsFail":null,"chatP95":null,"verdict":"FAIL","totalPass":1,"totalChecks":3},{"timestamp":"20260504_122425","prettyTs":"2026-05-04 12:24","relPath":"20260504_122425","hasMd":true,"testFile":"shimyChatLoad","profile":"smoke","mode":"","timeline":false,"maxVus":10,"total":50,"rps":0.39466891335366056,"p95":658.8234499999999,"failRate":0,"wsOk":23,"wsFail":0,"chatP95":220.09999999999997,"verdict":"PASS","totalPass":3,"totalChecks":3},{"timestamp":"20260504_122212","prettyTs":"2026-05-04 12:22","relPath":"20260504_122212","hasMd":true,"testFile":"shimyFeedLoad","profile":"smoke","mode":"","timeline":false,"maxVus":10,"total":482,"rps":4.944287826320176,"p95":620.9818,"failRate":0,"wsOk":null,"wsFail":null,"chatP95":null,"verdict":"PASS","totalPass":2,"totalChecks":2},{"timestamp":"20260504_011937","prettyTs":"2026-05-04 01:19","relPath":"20260504_011937","hasMd":true,"testFile":"shimyFeedLoad","profile":"smoke","mode":"","timeline":true,"maxVus":10,"total":488,"rps":5.051012744615993,"p95":589.0184499999999,"failRate":0,"wsOk":null,"wsFail":null,"chatP95":null,"verdict":"PASS","totalPass":2,"totalChecks":2},{"timestamp":"20260504_010917","prettyTs":"2026-05-04 01:09","relPath":"20260504_010917","hasMd":true,"testFile":"shimyChatLoad","profile":"smoke","mode":"typing","timeline":false,"maxVus":10,"total":50,"rps":0.40619179931577476,"p95":512.8223,"failRate":0,"wsOk":23,"wsFail":0,"chatP95":0,"verdict":"PASS","totalPass":3,"totalChecks":3},{"timestamp":"20260504_010343","prettyTs":"2026-05-04 01:03","relPath":"20260504_010343","hasMd":true,"testFile":"shimyChatLoad","profile":"smoke","mode":"","timeline":false,"maxVus":10,"total":50,"rps":0.4061318798425693,"p95":512.0771,"failRate":0,"wsOk":23,"wsFail":0,"chatP95":195,"verdict":"PASS","totalPass":3,"totalChecks":3},{"timestamp":"20260503_235134","prettyTs":"2026-05-03 23:51","relPath":"20260503_235134","hasMd":true,"testFile":"shimyFeedLoad","profile":"smoke","mode":"","timeline":false,"maxVus":10,"total":504,"rps":5.223766841478711,"p95":508.73785,"failRate":0,"wsOk":null,"wsFail":null,"chatP95":null,"verdict":"PASS","totalPass":2,"totalChecks":2}];
+    const COLSPAN = 10;
+
+    // Persisted UI state ----------------------------------------------------
+    const LS_GROUP = 'k6-compare:groupMode';
+    const LS_EXPANDED = 'k6-compare:expandedGroups';
+
+    let sortKey = 'timestamp';
+    let sortDir = 'desc';
+    let filterText = '';
+    let groupMode = localStorage.getItem(LS_GROUP) === '1';
+    let expandedGroups = new Set(JSON.parse(localStorage.getItem(LS_EXPANDED) || '[]'));
+
+    function persistGroupMode() {
+      localStorage.setItem(LS_GROUP, groupMode ? '1' : '0');
+    }
+    function persistExpanded() {
+      localStorage.setItem(LS_EXPANDED, JSON.stringify([...expandedGroups]));
+    }
+
+    // Helpers ---------------------------------------------------------------
+    function compareValues(a, b, key) {
+      const va = a[key];
+      const vb = b[key];
+      if (va == null && vb == null) return 0;
+      if (va == null) return 1;
+      if (vb == null) return -1;
+      if (typeof va === 'number' && typeof vb === 'number') return va - vb;
+      return String(va).localeCompare(String(vb));
+    }
+
+    function rowMatches(r, q) {
+      if (!q) return true;
+      const hay = [r.timestamp, r.prettyTs, r.testFile, r.profile, r.mode, r.verdict]
+        .filter(Boolean).join(' ').toLowerCase();
+      return hay.includes(q.toLowerCase());
+    }
+
+    function fmt(v, digits) {
+      if (v === null || v === undefined) return '<span class="empty">—</span>';
+      if (typeof v === 'number') return v.toFixed(digits ?? 2);
+      return String(v);
+    }
+    function fmtPct(v) {
+      if (v === null || v === undefined) return '<span class="empty">—</span>';
+      return (v * 100).toFixed(2) + '%';
+    }
+
+    function groupKeyOf(r) {
+      if (!r.testFile) return '__unknown__';
+      return [r.testFile, r.profile || '', r.mode || ''].join('|');
+    }
+    function groupDisplayName(r) {
+      if (!r.testFile) return '(unknown test)';
+      const parts = [r.testFile];
+      if (r.profile) parts.push(r.profile);
+      if (r.mode) parts.push(r.mode);
+      return parts.join(' / ');
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[c]));
+    }
+
+    function rowHtml(r, extraClass) {
+      const verdictClass =
+        r.verdict === 'PASS' ? 'verdict-pass' :
+        r.verdict === 'FAIL' ? 'verdict-fail' : 'verdict-na';
+      const verdictText =
+        r.totalChecks ? r.verdict + ' ' + r.totalPass + '/' + r.totalChecks : r.verdict;
+
+      const pills = [];
+      if (r.profile) pills.push('<span class="pill">' + escapeHtml(r.profile) + '</span>');
+      if (r.mode)    pills.push('<span class="pill pill-mode">' + escapeHtml(r.mode) + '</span>');
+      if (r.timeline) pills.push('<span class="pill pill-tl">timeline</span>');
+
+      return '<tr' + (extraClass ? ' class="' + extraClass + '"' : '') + '>' +
+        '<td>' +
+          '<a href="' + r.relPath + '/summary.html">' + r.prettyTs + '</a>' +
+          (r.hasMd ? ' <a class="md-link" href="' + r.relPath + '/summary.md">md</a>' : '') +
+        '</td>' +
+        '<td><div class="test-cell">' +
+          '<span class="file">' + (r.testFile || '<span class="empty">—</span>') + '</span>' +
+          (pills.length ? '<span class="pills">' + pills.join('') + '</span>' : '') +
+        '</div></td>' +
+        '<td><span class="verdict-pill ' + verdictClass + '">' + verdictText + '</span></td>' +
+        '<td class="num">' + fmt(r.maxVus, 0) + '</td>' +
+        '<td class="num">' + fmt(r.rps) + '</td>' +
+        '<td class="num">' + fmt(r.total, 0) + '</td>' +
+        '<td class="num">' + fmt(r.p95) + '</td>' +
+        '<td class="num">' + fmtPct(r.failRate) + '</td>' +
+        '<td class="num">' + fmt(r.wsOk, 0) + ' / ' + fmt(r.wsFail, 0) + '</td>' +
+        '<td class="num">' + fmt(r.chatP95) + '</td>' +
+      '</tr>';
+    }
+
+    // Renderers -------------------------------------------------------------
+    function renderFlat(filtered) {
+      filtered.sort((a, b) => {
+        const c = compareValues(a, b, sortKey);
+        return sortDir === 'desc' ? -c : c;
+      });
+      return filtered.map(r => rowHtml(r)).join('');
+    }
+
+    function renderGrouped(filtered) {
+      // Bucket runs by group key.
+      const groups = new Map();
+      for (const r of filtered) {
+        const key = groupKeyOf(r);
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(r);
+      }
+
+      // Sort groups by their newest run (newest-first).
+      const sortedGroups = [...groups.entries()].sort(
+        ([, ra], [, rb]) => rb[0].timestamp.localeCompare(ra[0].timestamp)
+      );
+
+      // When a filter is active, show all matching groups expanded for the
+      // duration of the render — without mutating expandedGroups. That way
+      // clearing the filter restores the user's manual choices.
+      const effectiveOpen = filterText
+        ? new Set(groups.keys())
+        : expandedGroups;
+
+      return sortedGroups.map(([key, gRuns]) => {
+        gRuns.sort((a, b) => {
+          const c = compareValues(a, b, sortKey);
+          return sortDir === 'desc' ? -c : c;
+        });
+        const expanded = effectiveOpen.has(key);
+
+        const passCount = gRuns.filter(r => r.verdict === 'PASS').length;
+        const failCount = gRuns.filter(r => r.verdict === 'FAIL').length;
+        const naCount = gRuns.length - passCount - failCount;
+        const lastRun = gRuns.reduce(
+          (acc, r) => (r.timestamp > acc.timestamp ? r : acc),
+          gRuns[0]
+        );
+
+        const verdictPills = [
+          passCount > 0 ? '<span class="verdict-pill verdict-pass">' + passCount + ' pass</span>' : '',
+          failCount > 0 ? '<span class="verdict-pill verdict-fail">' + failCount + ' fail</span>' : '',
+          naCount > 0 ? '<span class="verdict-pill verdict-na">' + naCount + ' n/a</span>' : '',
+        ].filter(Boolean).join(' ');
+
+        const header = '<tr class="group-header" data-group="' + escapeHtml(key) + '">' +
+          '<td colspan="' + COLSPAN + '">' +
+            '<span class="caret">' + (expanded ? '▼' : '▶') + '</span>' +
+            '<span class="group-name">' + escapeHtml(groupDisplayName(gRuns[0])) + '</span>' +
+            '<span class="group-meta">' +
+              gRuns.length + ' run' + (gRuns.length === 1 ? '' : 's') + ' · ' +
+              verdictPills +
+              (verdictPills ? ' · ' : '') +
+              'last: ' + lastRun.prettyTs +
+            '</span>' +
+          '</td>' +
+        '</tr>';
+
+        const rows = expanded ? gRuns.map(r => rowHtml(r, 'group-row')).join('') : '';
+        return header + rows;
+      }).join('');
+    }
+
+    // Main render -----------------------------------------------------------
+    function render() {
+      const filtered = RUNS.filter(r => rowMatches(r, filterText));
+
+      const tbody = document.getElementById('tbody');
+      tbody.innerHTML = groupMode
+        ? renderGrouped(filtered)
+        : renderFlat(filtered);
+
+      document.getElementById('count').textContent =
+        filtered.length === RUNS.length
+          ? RUNS.length + ' run' + (RUNS.length === 1 ? '' : 's')
+          : filtered.length + ' / ' + RUNS.length + ' runs';
+
+      // Sort arrows.
+      document.querySelectorAll('th').forEach(th => {
+        const arrow = th.querySelector('.arrow');
+        if (arrow) arrow.remove();
+        if (th.dataset.key === sortKey) {
+          const span = document.createElement('span');
+          span.className = 'arrow';
+          span.textContent = sortDir === 'desc' ? '▼' : '▲';
+          th.appendChild(span);
+        }
+      });
+
+      // Wire up group-header clicks (delegation: re-bind after each render).
+      tbody.querySelectorAll('.group-header').forEach(tr => {
+        tr.addEventListener('click', () => {
+          const key = tr.dataset.group;
+          // While a filter is active, we override expansion implicitly. Don't
+          // surprise the user by rewriting their saved state in that mode.
+          if (filterText) return;
+          if (expandedGroups.has(key)) expandedGroups.delete(key);
+          else expandedGroups.add(key);
+          persistExpanded();
+          render();
+        });
+      });
+
+      // Reflect current state in the toolbar widgets.
+      document.getElementById('groupToggle').checked = groupMode;
+      const expandBtn = document.getElementById('expandAll');
+      const collapseBtn = document.getElementById('collapseAll');
+      const groupBtnsEnabled = groupMode && !filterText;
+      expandBtn.disabled = !groupBtnsEnabled;
+      collapseBtn.disabled = !groupBtnsEnabled;
+    }
+
+    // Wiring ----------------------------------------------------------------
+    document.querySelectorAll('th').forEach(th => {
+      th.addEventListener('click', () => {
+        const key = th.dataset.key;
+        if (!key) return;
+        if (sortKey === key) {
+          sortDir = sortDir === 'desc' ? 'asc' : 'desc';
+        } else {
+          sortKey = key;
+          sortDir = key === 'timestamp' ? 'desc' : 'asc';
+        }
+        render();
+      });
+    });
+
+    document.getElementById('filter').addEventListener('input', (e) => {
+      filterText = e.target.value;
+      render();
+    });
+
+    document.getElementById('groupToggle').addEventListener('change', (e) => {
+      groupMode = e.target.checked;
+      persistGroupMode();
+      render();
+    });
+
+    document.getElementById('expandAll').addEventListener('click', () => {
+      const allKeys = new Set(RUNS.map(groupKeyOf));
+      expandedGroups = allKeys;
+      persistExpanded();
+      render();
+    });
+
+    document.getElementById('collapseAll').addEventListener('click', () => {
+      expandedGroups = new Set();
+      persistExpanded();
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

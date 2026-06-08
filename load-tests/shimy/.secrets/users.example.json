@@ -1,0 +1,28 @@
+{
+  "_README": [
+    "Pool of test users + chats for Shimy load tests.",
+    "Copy this file to users.json (same folder) and fill it with REAL test credentials.",
+    "users.json is gitignored — only this example template is committed.",
+    "",
+    "Layout:",
+    "  users[]  — list of 50 test accounts. Two consecutive users with the same pair_id form a chat-pair.",
+    "  chats[]  — chat_id created in Shimy app for each pair_id (run the post → response → approve flow manually).",
+    "",
+    "How VU mapping works:",
+    "  k6 VU N (1-indexed) → users[(N-1) % users.length]",
+    "  In chat tests, VUs from the same pair_id will WS-connect with their own token and exchange messages",
+    "  in the chats[] entry that has the same pair_id.",
+    "",
+    "Below: 4 example users (2 pairs, 2 chats). Replace with your 50 users / 25 chats."
+  ],
+  "users": [
+    { "id": 1,  "pair_id": 1,  "phone_number": "+380000000001", "password": "REPLACE_ME" },
+    { "id": 2,  "pair_id": 1,  "phone_number": "+380000000002", "password": "REPLACE_ME" },
+    { "id": 3,  "pair_id": 2,  "phone_number": "+380000000003", "password": "REPLACE_ME" },
+    { "id": 4,  "pair_id": 2,  "phone_number": "+380000000004", "password": "REPLACE_ME" }
+  ],
+  "chats": [
+    { "pair_id": 1, "chat_id": "REPLACE_WITH_REAL_UUID" },
+    { "pair_id": 2, "chat_id": "REPLACE_WITH_REAL_UUID" }
+  ]
+}
