@@ -26,7 +26,7 @@
 //   node tools/shimy-seed-demo.mjs --teardown   # DELETE everything we created
 //
 // Env knobs:
-//   TARGET_PHONE      — phone of the demo target user (default: +380668968268)
+//   TARGET_PHONE      — phone of the demo target user (default: +14842690042)
 //   TARGET_PASSWORD   — password of the demo target user (default: test1234)
 //   TARGET_LAT        — target latitude  (default: 33.42828810, Orange County CA)
 //   TARGET_LON        — target longitude (default: -117.61373852)
@@ -58,7 +58,7 @@ const USERS_PATH = path.join(ROOT, 'load-tests/shimy/.secrets/users.json');
 const STATE_PATH = path.join(ROOT, 'load-tests/shimy/.secrets/demo-state.json');
 
 const BASE = process.env.SHIMY_BASE || 'https://api.shimy.app/api/v1';
-const TARGET_PHONE = process.env.TARGET_PHONE || '+380668968268';
+const TARGET_PHONE = process.env.TARGET_PHONE || '+14842690042';
 const TARGET_PASSWORD = process.env.TARGET_PASSWORD || 'test1234';
 // PM demo target: Orange County, California (the demo target user's home location).
 // Override via TARGET_LAT / TARGET_LON env vars for other demos.

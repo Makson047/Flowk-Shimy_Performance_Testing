@@ -21,7 +21,9 @@
 //   node tools/shimy-bootstrap-posts.mjs --dry-run      # plan only, no API calls
 //
 // Env knobs:
-//   LAT, LON          — geo center (default: Vinnytsia 49.1951, 28.3679)
+//   LAT, LON          — geo center (default: Orange County CA, 33.42828810,
+//                       -117.61373852). Override per run, e.g.
+//                       LAT=49.79 LON=24.04 npm run shimy:bootstrap-posts
 //   RADIUS_MILES      — post visibility radius (default 20)
 //   JITTER_MILES      — randomization radius around the center (default 1.5)
 //   USER_LIMIT        — only operate on the first N users from users.json
@@ -54,8 +56,16 @@ const SECRETS_PATH = path.join(
 const BACKUP_PATH = SECRETS_PATH + '.bak';
 
 const BASE = process.env.SHIMY_BASE || 'https://api.shimy.app/api/v1';
-const LAT = Number(process.env.LAT) || 49.195099341953004;
-const LON = Number(process.env.LON) || 28.36791279543137;
+// Default geo center: Orange County, California (matches the PM demo target).
+// Override either or both via LAT / LON env vars on the command line.
+// Number.isFinite check correctly accepts negative values (e.g. LON=-117.6)
+// and explicit 0, while still falling back when the env var is unset/NaN.
+const LAT = Number.isFinite(Number(process.env.LAT))
+  ? Number(process.env.LAT)
+  : 33.42828810;
+const LON = Number.isFinite(Number(process.env.LON))
+  ? Number(process.env.LON)
+  : -117.61373852;
 const RADIUS_MILES = Number(process.env.RADIUS_MILES) || 20;
 const JITTER_MILES = Number(process.env.JITTER_MILES) || 1.5;
 
@@ -118,12 +128,74 @@ async function signIn(phone, password) {
   return r.json.access_token;
 }
 
-// Create a post. Returns { postId, adopted } where:
-//   adopted=false → we created a fresh post
-//   adopted=true  → server reported 409, we picked up the existing post_id
-async function createPost(token, selfiePhotoId) {
+// Create a post.
+//
+// recreateOnConflict=false (default, idempotent mode):
+//   - 200 OK              → { postId, adopted:false }
+//   - 409 with active_id  → { postId:<existing>, adopted:true } (kept as-is)
+//
+// recreateOnConflict=true (force mode):
+//   - 200 OK              → { postId, adopted:false }
+//   - 409 with active_id  → server is the source of truth. We DELETE that
+//                           active_post_id (whatever it is — could differ from
+//                           users.json[i].post_id if a previous run or another
+//                           script changed it) and POST again. Returns
+//                           { postId:<new>, adopted:false, recreatedFrom:<old> }.
+//
+// This lets --force really mean "recreate" even when users.json is stale
+// (e.g. seed-demo created a post we don't know about).
+async function createPost(token, selfiePhotoId, recreateOnConflict = false) {
+  // Generate the coordinates once here so we can both send them and report
+  // them back to the caller for logging.
   const { latitude, longitude } = jitterCoords(LAT, LON, JITTER_MILES);
-  const body = {
+  const body = makePostBody(selfiePhotoId, latitude, longitude);
+
+  let r = await httpJson('POST', `${BASE}/posts/`, body, token);
+
+  if (r.ok && r.json?.id) {
+    return {
+      postId: r.json.id,
+      adopted: false,
+      latitude,
+      longitude,
+      firstName: r.json?.user?.first_name ?? null,
+    };
+  }
+
+  // Shimy: 409 Conflict { detail: { message, active_post_id } }
+  if (r.status === 409 && r.json?.detail?.active_post_id) {
+    const conflictId = r.json.detail.active_post_id;
+
+    if (!recreateOnConflict) {
+      // We did NOT create a post here — the existing one lives at unknown
+      // coordinates, so we deliberately don't report latitude/longitude.
+      return { postId: conflictId, adopted: true };
+    }
+
+    // Force mode: server told us what's actually active — delete THAT, not
+    // whatever users.json claimed, then create a fresh post in our location.
+    await deletePost(token, conflictId);
+    r = await httpJson('POST', `${BASE}/posts/`, body, token);
+    if (r.ok && r.json?.id) {
+      return {
+        postId: r.json.id,
+        adopted: false,
+        recreatedFrom: conflictId,
+        latitude,
+        longitude,
+        firstName: r.json?.user?.first_name ?? null,
+      };
+    }
+    throw new Error(
+      `POST /posts retry after force-delete HTTP ${r.status}: ${r.text.slice(0, 200)}`
+    );
+  }
+
+  throw new Error(`POST /posts HTTP ${r.status}: ${r.text.slice(0, 200)}`);
+}
+
+function makePostBody(selfiePhotoId, latitude, longitude) {
+  return {
     longitude,
     latitude,
     radius_miles: RADIUS_MILES,
@@ -132,18 +204,6 @@ async function createPost(token, selfiePhotoId) {
     age_range_max: 99,
     selfie_photo_id: selfiePhotoId,
   };
-  const r = await httpJson('POST', `${BASE}/posts/`, body, token);
-
-  if (r.ok && r.json?.id) {
-    return { postId: r.json.id, adopted: false };
-  }
-
-  // Shimy: 409 Conflict { detail: { message, active_post_id } }
-  if (r.status === 409 && r.json?.detail?.active_post_id) {
-    return { postId: r.json.detail.active_post_id, adopted: true };
-  }
-
-  throw new Error(`POST /posts HTTP ${r.status}: ${r.text.slice(0, 200)}`);
 }
 
 // Delete a post. Tolerates 404 (already gone). Returns true if the post is
@@ -282,22 +342,49 @@ function describeUser(u) {
 
     try {
       const token = await signIn(user.phone_number, user.password);
-
-      if (FORCE && userHasPost(user)) {
-        await deletePost(token, user.post_id);
-        console.log(`${tag}: 🗑  deleted old post ${user.post_id}`);
-      }
-
       const selfie = SELFIE_PHOTO_IDS[i % SELFIE_PHOTO_IDS.length];
 
-      const { postId, adopted: didAdopt } = await createPost(token, selfie);
+      // Snapshot the id stored in users.json BEFORE we overwrite it, so we
+      // can flag the (informative) case where the server's actual active
+      // post differed from what users.json claimed.
+      const idFromUsersJson = user.post_id;
+
+      // In --force we let createPost handle 409 by deleting the server's
+      // actual active_post_id and POSTing again. This is more reliable than
+      // a pre-emptive DELETE based on users.json, which can be stale (e.g.
+      // after seed-demo replaced a post without updating users.json).
+      const {
+        postId,
+        adopted: didAdopt,
+        recreatedFrom,
+        latitude,
+        longitude,
+        firstName,
+      } = await createPost(token, selfie, FORCE);
       user.post_id = postId;
+
+      if (recreatedFrom) {
+        const differed = recreatedFrom !== idFromUsersJson;
+        console.log(
+          `${tag}: 🗑  deleted server's active post ${recreatedFrom}` +
+            (differed ? ' (note: differed from users.json)' : '')
+        );
+      }
+
+      // "Boloto " prefix if the API returned a first_name, else just the phone
+      // (already shown in `tag`).
+      const who = firstName ? `"${firstName}" ` : '';
+
       if (didAdopt) {
         adopted.push({ id: user.id, post_id: postId });
-        console.log(`${tag}: ♻️  adopted existing post_id=${postId}`);
+        console.log(`${tag}: ♻️  ${who}adopted existing post_id=${postId}`);
       } else {
-        created.push({ id: user.id, post_id: postId });
-        console.log(`${tag}: ✅ post_id=${postId}`);
+        created.push({ id: user.id, post_id: postId, latitude, longitude });
+        const coords =
+          latitude != null && longitude != null
+            ? ` @ lat=${latitude.toFixed(8)}, lon=${longitude.toFixed(8)}`
+            : '';
+        console.log(`${tag}: ✅ ${who}post_id=${postId}${coords}`);
       }
     } catch (err) {
       failed.push({ id: user.id, error: String(err.message || err) });
