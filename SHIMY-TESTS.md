@@ -2,6 +2,8 @@
 
 Цей документ містить лише те, що стосується **Shimy**: підготовку тестових користувачів, helper-скрипти, load-тести, env-змінні та типові сценарії запуску.
 
+Цей файл є окремим доменом у репозиторії: Flowk-скрипти тепер живуть під `load-tests/flowk/`, а Shimy-частина зосереджена в `load-tests/shimy/` і `tools/shimy-*.mjs`.
+
 API:
 - REST: `https://api.shimy.app/api/v1`
 - WebSocket: `wss://api.shimy.app/ws/connect`

@@ -1,11 +1,20 @@
 # Flowk & Shimy k6 Load Testing
 
-This repository is a small load-testing harness built with [k6](https://k6.io/). It supports two families of tests:
+This repository is a small load-testing harness built with [k6](https://k6.io/). It supports two separate product domains:
 
-- Flowk legacy scenarios under `load-tests/*.js`
+- Flowk legacy scenarios under `load-tests/flowk/*.js`
 - Shimy feed/chat performance tests under `load-tests/shimy/*.js`
 
-The project also includes helper scripts for preparing realistic Shimy test data, generating HTML reports, and comparing multiple runs side by side.
+The repo is intentionally split by ownership rather than mixing all scenarios into a single bucket. Flowk tests target the legacy Flowk API, while Shimy tests target the separate Shimy app and its own auth/data bootstrap flows.
+
+## Repository split
+
+| Area | Scope | Typical files | How to run |
+|---|---|---|---|
+| Flowk | Legacy Flowk API load tests | `load-tests/flowk/*.js` | `npm run flowk:discovery`, `npm run report -- flowk/discoveryLoadTest.js` |
+| Shimy | Shimy feed/chat + seed helpers | `load-tests/shimy/*.js`, `tools/shimy-*.mjs` | `npm run shimy:feed`, `npm run shimy:chat` |
+
+The shared report wrapper still handles both domains, but the test path determines the output folder and metadata.
 
 ---
 
@@ -18,26 +27,31 @@ The project also includes helper scripts for preparing realistic Shimy test data
 ├── scripts/
 │   └── k6-run-report.sh          # common wrapper for k6 + report generation
 ├── load-tests/
-│   ├── badgetTest.js
-│   ├── discoveryLoadTest.js
-│   ├── discoveryLoadTest_test.js
-│   ├── feedLoad.js
-│   ├── likeLoadTest.js
-│   ├── requestFlowks.js
-│   ├── showCommentsLoad.js
-│   ├── websocketLoad_test.js
-│   ├── reports/                  # generated HTML/CSV/JSON reports
-│   └── shimy/
-│       ├── lib/auth.js
-│       ├── shimyFeedLoad.js
-│       └── shimyChatLoad.js
+│   ├── flowk/
+│   │   ├── badgetTest.js
+│   │   ├── discoveryLoadTest.js
+│   │   ├── discoveryLoadTest_test.js
+│   │   ├── feedLoad.js
+│   │   ├── likeLoadTest.js
+│   │   ├── requestFlowks.js
+│   │   ├── showCommentsLoad.js
+│   │   └── websocketLoad_test.js
+│   ├── shimy/
+│   │   ├── lib/auth.js
+│   │   ├── shimyFeedLoad.js
+│   │   └── shimyChatLoad.js
+│   └── reports/                  # generated HTML/CSV/JSON reports
+│       ├── Flowk/
+│       └── Shimy/
 ├── tools/
 │   ├── k6-html-report.mjs
 │   ├── k6-compare-index.mjs
 │   ├── shimy-bootstrap-chats.mjs
 │   ├── shimy-bootstrap-posts.mjs
 │   └── shimy-seed-demo.mjs
-└── SHIMY-TESTS.md               # detailed Shimy-specific documentation
+├── FLOWK-TESTS.md               # detailed Flowk-specific documentation
+├── SHIMY-TESTS.md               # detailed Shimy-specific documentation
+└── ...
 ```
 
 The repository is intentionally lightweight: there are no npm dependencies, and helper scripts rely on Node.js built-ins such as `fs`, `fetch`, and `readline`.
@@ -64,13 +78,21 @@ The main wrapper is:
 Examples:
 
 ```bash
-./scripts/k6-run-report.sh discoveryLoadTest.js
+./scripts/k6-run-report.sh flowk/discoveryLoadTest.js
 ./scripts/k6-run-report.sh shimy/shimyFeedLoad.js
 ```
 
-Via npm, the project also exposes a number of Shimy aliases:
+Via npm, the repo exposes separate aliases for each domain:
 
 ```bash
+# Flowk
+npm run flowk:discovery
+npm run flowk:feed
+npm run flowk:comments
+npm run flowk:like
+npm run flowk:badget
+
+# Shimy
 npm run shimy:feed
 npm run shimy:feed:smoke
 npm run shimy:chat
@@ -81,14 +103,16 @@ npm run shimy:chat:typing
 
 ## Flowk tests
 
-The legacy Flowk scenarios are placed directly under `load-tests/*.js`. They are ordinary k6 files and can be launched through the shared report runner.
+The legacy Flowk scenarios are placed under `load-tests/flowk/*.js`. They are ordinary k6 files and can be launched through the shared report runner or through the dedicated Flowk aliases above.
+
+For a more detailed Flowk-only walkthrough, see [FLOWK-TESTS.md](FLOWK-TESTS.md).
 
 Examples:
 
 ```bash
-npm run report -- discoveryLoadTest.js
-npm run report -- badgetTest.js
-npm run report -- likeLoadTest.js
+npm run report -- flowk/discoveryLoadTest.js
+npm run report -- flowk/badgetTest.js
+npm run report -- flowk/likeLoadTest.js
 ```
 
 The generic report runner creates a timestamped directory under `load-tests/reports/` and also writes summary artifacts, including HTML/CSV/JSON output.
@@ -97,7 +121,9 @@ The generic report runner creates a timestamped directory under `load-tests/repo
 
 ## Shimy tests
 
-The Shimy suite is more structured and includes both REST and WebSocket tests:
+The Shimy suite is more structured and includes both REST and WebSocket tests. This part is intentionally isolated from Flowk and has its own bootstrap / dataset helpers.
+
+For the detailed Shimy-only guide, see [SHIMY-TESTS.md](SHIMY-TESTS.md).
 
 ### Feed test
 
@@ -190,9 +216,10 @@ npm run shimy:seed-demo:teardown
 
 ## Reports and artifacts
 
-Every k6 run writes a timestamped result folder. For Shimy runs, the output is grouped under:
+Every k6 run writes a timestamped result folder. Reports are grouped by app:
 
 ```text
+load-tests/reports/Flowk/<TIMESTAMP>/
 load-tests/reports/Shimy/<TIMESTAMP>/
 ```
 
@@ -205,9 +232,10 @@ Artifacts include:
 - `meta.json` — test metadata used by comparison pages
 - `raw.ndjson` — per-sample timeline data, if `TIMELINE=1`
 
-The compare page is refreshed automatically and lives at:
+The compare page is refreshed automatically and lives per app:
 
 ```text
+load-tests/reports/Flowk/index.html
 load-tests/reports/Shimy/index.html
 ```
 

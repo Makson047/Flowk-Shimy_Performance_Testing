@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Usage:
-#   ./scripts/k6-run-report.sh like.js
-#   ./scripts/k6-run-report.sh discoveryLoadTest_test.js
+#   ./scripts/k6-run-report.sh flowk/discoveryLoadTest.js
+#   ./scripts/k6-run-report.sh flowk/feedLoad.js
 #   ./scripts/k6-run-report.sh shimy/shimyFeedLoad.js
 #
 # Optional env knobs (forwarded to k6 via --env):
@@ -19,24 +19,52 @@ set -e
 TEST_FILE="$1"
 
 if [ -z "$TEST_FILE" ]; then
-  echo "❌ Please provide test file name from load-tests/. Example:"
-  echo "   ./scripts/k6-run-report.sh like.js"
+  echo "❌ Please provide test file path from load-tests/. Example:"
+  echo "   ./scripts/k6-run-report.sh flowk/discoveryLoadTest.js"
   echo "   ./scripts/k6-run-report.sh shimy/shimyFeedLoad.js"
   exit 1
 fi
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-TEST_PATH="$ROOT_DIR/load-tests/$TEST_FILE"
+TEST_PATH=""
+for candidate in \
+  "$ROOT_DIR/load-tests/$TEST_FILE" \
+  "$ROOT_DIR/$TEST_FILE" \
+  "$ROOT_DIR/load-tests/flowk/$TEST_FILE" \
+  "$ROOT_DIR/load-tests/shimy/$TEST_FILE"; do
+  if [ -f "$candidate" ]; then
+    TEST_PATH="$candidate"
+    break
+  fi
+done
 
-if [ ! -f "$TEST_PATH" ]; then
-  echo "❌ Test file not found: $TEST_PATH"
+if [ -z "$TEST_PATH" ]; then
+  echo "❌ Test file not found. Tried:"
+  for candidate in \
+    "$ROOT_DIR/load-tests/$TEST_FILE" \
+    "$ROOT_DIR/$TEST_FILE" \
+    "$ROOT_DIR/load-tests/flowk/$TEST_FILE" \
+    "$ROOT_DIR/load-tests/shimy/$TEST_FILE"; do
+      echo "   $candidate"
+  done
   exit 1
 fi
 
-# Route Shimy reports into reports/Shimy/, keep Flowk reports in reports/.
+# Route reports by project name: Flowk and Shimy each get their own folder.
 case "$TEST_FILE" in
   shimy/*) REPORTS_SUBDIR="Shimy" ;;
-  *)       REPORTS_SUBDIR="" ;;
+  flowk/*) REPORTS_SUBDIR="Flowk" ;;
+  *)
+    case "$(basename "$TEST_PATH")" in
+      *.js)
+        if [ -d "$ROOT_DIR/load-tests/shimy" ] && [ -f "$ROOT_DIR/load-tests/shimy/$(basename "$TEST_PATH")" ]; then
+          REPORTS_SUBDIR="Shimy"
+        else
+          REPORTS_SUBDIR="Flowk"
+        fi
+        ;;
+    esac
+    ;;
 esac
 
 TIMESTAMP="$(date +%Y%m%d_%H%M%S)"

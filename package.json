@@ -6,6 +6,13 @@
   "scripts": {
     "report": "./scripts/k6-run-report.sh",
     "report:stone-fruit": "./scripts/k6-run-report.sh flowkStage.js",
+    "flowk:report": "./scripts/k6-run-report.sh flowk/discoveryLoadTest.js",
+    "flowk:discovery": "./scripts/k6-run-report.sh flowk/discoveryLoadTest.js",
+    "flowk:discovery:test": "./scripts/k6-run-report.sh flowk/discoveryLoadTest_test.js",
+    "flowk:feed": "./scripts/k6-run-report.sh flowk/feedLoad.js",
+    "flowk:comments": "./scripts/k6-run-report.sh flowk/showCommentsLoad.js",
+    "flowk:like": "./scripts/k6-run-report.sh flowk/likeLoadTest.js",
+    "flowk:badget": "./scripts/k6-run-report.sh flowk/badgetTest.js",
     "shimy:bootstrap-chats": "node tools/shimy-bootstrap-chats.mjs",
     "shimy:bootstrap-chats:dry": "node tools/shimy-bootstrap-chats.mjs --dry-run",
     "shimy:bootstrap-chats:force": "node tools/shimy-bootstrap-chats.mjs --force",
